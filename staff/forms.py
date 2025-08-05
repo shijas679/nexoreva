@@ -1,14 +1,13 @@
 from django import forms
 from .models import Staff
+from django.conf import settings
 
 class StaffForm(forms.ModelForm):
     class Meta:
         model = Staff
-        fields = '__all__'  
+        fields = '__all__'
 
         widgets = {
-            'join_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
-            'date_of_birth': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'full_name': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
@@ -22,4 +21,18 @@ class StaffForm(forms.ModelForm):
             'role': forms.Select(attrs={'class': 'form-select'}),
             'gender': forms.Select(attrs={'class': 'form-select'}),
             'status': forms.Select(attrs={'class': 'form-select'}),
+            'join_date': forms.DateInput(
+                attrs={'type': 'date', 'class': 'form-control'},
+                format='%Y-%m-%d'
+            ),
+            'date_of_birth': forms.DateInput(
+                attrs={'type': 'date', 'class': 'form-control'},
+                format='%Y-%m-%d'
+            ),
+            'staff_code': forms.TextInput(attrs={'readonly': 'readonly', 'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(StaffForm, self).__init__(*args, **kwargs)
+        self.fields['join_date'].input_formats = ['%Y-%m-%d']
+        self.fields['date_of_birth'].input_formats = ['%Y-%m-%d']
