@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}  {# Optional, if you're using crispy-forms #}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">➕ Add New Staff</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">🧍 Basic Information</legend>
+      {{ form.full_name.label }} {{ form.full_name }}
+      {{ form.role.label }} {{ form.role }}
+      {{ form.department.label }} {{ form.department }}
+      {{ form.designation.label }} {{ form.designation }}
+      {{ form.employment_type.label }} {{ form.employment_type }}
+      {{ form.reporting_manager.label }} {{ form.reporting_manager }}
+      {{ form.join_date.label }} {{ form.join_date }}
+    </fieldset>
+
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📞 Contact Details</legend>
+      {{ form.email.label }} {{ form.email }}
+      {{ form.phone.label }} {{ form.phone }}
+      {{ form.emergency_contact.label }} {{ form.emergency_contact }}
+    </fieldset>
+
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📍 Personal Details</legend>
+      {{ form.date_of_birth.label }} {{ form.date_of_birth }}
+      {{ form.gender.label }} {{ form.gender }}
+      {{ form.address.label }} {{ form.address }}
+    </fieldset>
+
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📁 Documents</legend>
+      {{ form.id_proof.label }} {{ form.id_proof }}
+      {{ form.resume.label }} {{ form.resume }}
+      {{ form.offer_letter.label }} {{ form.offer_letter }}
+      {{ form.photo.label }} {{ form.photo }}
+    </fieldset>
+
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📜 Status & Notes</legend>
+      {{ form.status.label }} {{ form.status }}
+      {{ form.admin_notes.label }} {{ form.admin_notes }}
+    </fieldset>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock %}
