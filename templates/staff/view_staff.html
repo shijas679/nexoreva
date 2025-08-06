@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>📋 All Staff Members</h2>
+  <table class="table table-bordered table-striped mt-4">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Full Name</th>
+        <th>Role</th>
+        <th>Department</th>
+        <th>Email</th>
+        <th>Join Date</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for staff in staff_list %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ staff.full_name }}</td>
+        <td>{{ staff.role }}</td>
+        <td>{{ staff.department }}</td>
+        <td>{{ staff.email }}</td>
+        <td>{{ staff.join_date }}</td>
+        <td>{{ staff.status }}</td>
+        <td>
+          <a href="#" class="btn btn-sm btn-primary disabled">Edit</a>
+          <a href="#" class="btn btn-sm btn-danger disabled">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8">No staff found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
