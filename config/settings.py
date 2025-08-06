@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     'staff', 
     'dashboard', 
     'crispy_forms',
+    'certificate',
+]
+
     
 
 
-]
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
