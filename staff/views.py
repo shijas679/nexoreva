@@ -25,10 +25,12 @@ def add_staff(request):
 
             staff.save()
             messages.success(request, "✅ Staff member added successfully.")
-            return redirect('add_staff')
+            return redirect('view_staff')
         else:
             messages.error(request, "⚠️ Please correct the errors below.")
     else:
+
+
         form = StaffForm()
 
     return render(request, 'staff/add_staff.html', {'form': form})
@@ -63,39 +65,33 @@ def delete_staff(request, staff_id):
     messages.success(request, "🗑️ Staff member deleted successfully.")
     return redirect('view_staff')
 
-
+from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from staff.models import Staff
-from workassignment.forms import WorkAssignmentForm
 
 @login_required
-def search_staff_by_code(request):
-    staff = None
-    form = None
-    staff_code = request.POST.get('staff_code', '')
+def view_staff(request):
+    staff_list = Staff.objects.all().order_by('-id')  # default list
 
-    if request.method == 'POST':
-        staff = Staff.objects.filter(staff_code=staff_code).first()
-        if staff:
-            if 'task_title' in request.POST:
-                form = WorkAssignmentForm(request.POST, request.FILES)
-                if form.is_valid():
-                    assignment = form.save(commit=False)
-                    assignment.assigned_to = staff
-                    assignment.save()
-                    messages.success(request, "✅ Work assignment added successfully.")
-                    return redirect('search_staff_by_code')
-                else:
-                    messages.error(request, "⚠️ Please correct the errors below.")
-            else:
-                form = WorkAssignmentForm()
-        else:
-            messages.error(request, "⚠️ Staff not found.")
-    return render(request, 'staff/search_staff_code.html', {
-        'staff': staff,
-        'form': form,
-        'staff_code': staff_code
+    # Filter by role
+    role_filter = request.GET.get('sort', '')
+    if role_filter in ['Employee', 'Intern']:
+        staff_list = staff_list.filter(role=role_filter)
+    # if role_filter is 'All' or empty, show all (no filter)
+
+    # Search by name, email, or Unicode (staff_code)
+    query = request.GET.get('search', '')
+    if query is None or query.lower() == 'none':
+        query = ''
+
+    if query:
+        staff_list = staff_list.filter(
+            Q(full_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(staff_code__icontains=query)
+        )
+
+    return render(request, 'staff/view_staff.html', {
+        'staff_list': staff_list,
+        'selected_role': role_filter,
+        'search_query': query  # Send cleaned query string
     })
-    return redirect('view_staff')
