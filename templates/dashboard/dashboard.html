@@ -10,19 +10,9 @@
 </ul>
 
 <!-- Add Work Assignment Button -->
-<a href="{% url 'view_staff' %}" class="btn btn-primary mt-3">
+<a href="{% url 'viewwork_assignment_userlist_staff' %}" class="btn btn-primary mt-3">
     ➕ Add Work Assignment
 </a>
-{% endblock %}
-<div class="container mt-4">
-  <h2 class="mb-3">🧾 Admin Dashboard</h2>
-
-  <ul class="list-group mb-4">
-    <li class="list-group-item">👥 Total Staff: <strong>{{ total_staff }}</strong></li>
-    <li class="list-group-item">🏢 Total Departments: <strong>{{ total_departments }}</strong></li>
-    <li class="list-group-item">🎓 Total Interns: <strong>{{ total_interns }}</strong></li>
-  </ul>
-
   <!-- 🚀 Onboarding Button -->
   <a href="{% url 'view_staff' %}" class="btn btn-success">
     📋 Onboarding Staff

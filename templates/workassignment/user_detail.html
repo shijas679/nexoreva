@@ -1,10 +1,30 @@
-<h2>Assignments for {{ user.username }}</h2>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Assignments for {{ user.full_name }}</h2>
+
 <a href="{% url 'add_assignment' user.id %}">Add Assignment</a>
 
-<ul>
-  {% for assignment in assignments %}
-    <li>{{ assignment.title }} ({{ assignment.start_date }} to {{ assignment.end_date }})</li>
-  {% empty %}
-    <li>No assignments yet.</li>
-  {% endfor %}
-</ul>
+{% if assignments %}
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Task Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for assignment in assignments %}
+            <tr>
+                <td>{{ assignment.task_title }}</td>
+                <td>{{ assignment.start_date }}</td>
+                <td>{{ assignment.end_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No assignments found.</p>
+{% endif %}
+
+{% endblock %}
