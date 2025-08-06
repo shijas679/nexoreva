@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}  {# Optional, if you're using crispy-forms #}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="container mt-5">
@@ -15,46 +15,60 @@
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
 
+    <!-- 🧍 Basic Info -->
     <fieldset class="border p-3 mb-4">
       <legend class="w-auto">🧍 Basic Information</legend>
-      {{ form.full_name.label }} {{ form.full_name }}
-      {{ form.role.label }} {{ form.role }}
-      {{ form.department.label }} {{ form.department }}
-      {{ form.designation.label }} {{ form.designation }}
-      {{ form.employment_type.label }} {{ form.employment_type }}
-      {{ form.reporting_manager.label }} {{ form.reporting_manager }}
-      {{ form.join_date.label }} {{ form.join_date }}
+      <div class="mb-2">{{ form.full_name.label_tag }} {{ form.full_name }}</div>
+      <div class="mb-2">{{ form.role.label_tag }} {{ form.role }}</div>
+      <div class="mb-2">{{ form.department.label_tag }} {{ form.department }}</div>
+      <div class="mb-2">{{ form.designation.label_tag }} {{ form.designation }}</div>
+      <div class="mb-2">{{ form.employment_type.label_tag }} {{ form.employment_type }}</div>
+      <div class="mb-2">{{ form.reporting_manager.label_tag }} {{ form.reporting_manager }}</div>
+      <div class="mb-2">{{ form.join_date.label_tag }} {{ form.join_date }}</div>
     </fieldset>
 
+    <!-- 📞 Contact Info -->
     <fieldset class="border p-3 mb-4">
       <legend class="w-auto">📞 Contact Details</legend>
-      {{ form.email.label }} {{ form.email }}
-      {{ form.phone.label }} {{ form.phone }}
-      {{ form.emergency_contact.label }} {{ form.emergency_contact }}
+      <div class="mb-2">{{ form.email.label_tag }} {{ form.email }}</div>
+      <div class="mb-2">{{ form.phone.label_tag }} {{ form.phone }}</div>
+      <div class="mb-2">{{ form.emergency_contact.label_tag }} {{ form.emergency_contact }}</div>
     </fieldset>
 
+    <!-- 📍 Personal Info -->
     <fieldset class="border p-3 mb-4">
       <legend class="w-auto">📍 Personal Details</legend>
-      {{ form.date_of_birth.label }} {{ form.date_of_birth }}
-      {{ form.gender.label }} {{ form.gender }}
-      {{ form.address.label }} {{ form.address }}
+      <div class="mb-2">{{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}</div>
+      <div class="mb-2">{{ form.gender.label_tag }} {{ form.gender }}</div>
+      <div class="mb-2">{{ form.address.label_tag }} {{ form.address }}</div>
     </fieldset>
 
+    <!-- 📁 Documents -->
     <fieldset class="border p-3 mb-4">
       <legend class="w-auto">📁 Documents</legend>
-      {{ form.id_proof.label }} {{ form.id_proof }}
-      {{ form.resume.label }} {{ form.resume }}
-      {{ form.offer_letter.label }} {{ form.offer_letter }}
-      {{ form.photo.label }} {{ form.photo }}
+      <div class="mb-2">{{ form.id_proof.label_tag }} {{ form.id_proof }}</div>
+      <div class="mb-2">{{ form.resume.label_tag }} {{ form.resume }}</div>
+      <div class="mb-2">{{ form.offer_letter.label_tag }} {{ form.offer_letter }}</div>
+      <div class="mb-2">{{ form.photo.label_tag }} {{ form.photo }}</div>
     </fieldset>
 
+    <!-- 🆔 Unique Staff Code -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">🆔 Staff Code</legend>
+      <div class="mb-2">{{ form.staff_code.label_tag }} {{ form.staff_code }}</div>
+    </fieldset>
+
+    <!-- 📜 Status and Notes -->
     <fieldset class="border p-3 mb-4">
       <legend class="w-auto">📜 Status & Notes</legend>
-      {{ form.status.label }} {{ form.status }}
-      {{ form.admin_notes.label }} {{ form.admin_notes }}
+      <div class="mb-2">{{ form.status.label_tag }} {{ form.status }}</div>
+      <div class="mb-2">{{ form.admin_notes.label_tag }} {{ form.admin_notes }}</div>
     </fieldset>
 
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
+
+<!-- ✅ Load dynamic JS logic -->
+<script src="{% static 'js/staff_code.js' %}"></script>
 {% endblock %}
