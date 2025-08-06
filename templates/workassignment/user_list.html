@@ -1,0 +1,11 @@
+<h2>Staff List (Interns and Employees)</h2>
+<ul>
+  {% for user in users %}
+    <li><a href="{% url 'user_detail' user.id %}">{{ user.full_name }} ({{ user.role }})</a></li>
+  {% endfor %}
+</ul>
+<!-- Example in a user list template -->
+{% for user in users %}
+    <p>{{ user.full_name }} - {{ user.role }}</p>
+    <a href="{% url 'add_assignment' user.id %}">Assign Work</a>
+{% endfor %}

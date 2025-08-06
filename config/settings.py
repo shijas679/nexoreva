@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'staff', 
     'dashboard', 
     'crispy_forms',
+    'workassignment',
     
 
 

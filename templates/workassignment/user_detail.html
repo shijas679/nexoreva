@@ -1,0 +1,10 @@
+<h2>Assignments for {{ user.username }}</h2>
+<a href="{% url 'add_assignment' user.id %}">Add Assignment</a>
+
+<ul>
+  {% for assignment in assignments %}
+    <li>{{ assignment.title }} ({{ assignment.start_date }} to {{ assignment.end_date }})</li>
+  {% empty %}
+    <li>No assignments yet.</li>
+  {% endfor %}
+</ul>
