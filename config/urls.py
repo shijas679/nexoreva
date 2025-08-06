@@ -19,6 +19,7 @@ urlpatterns = [
     path('', include('attendance.urls')),      # << Make attendance home the default page
     path('dashboard/', include('dashboard.urls')),  # << dashboard now at /dashboard/
     path('staff/', include('staff.urls')),
+    path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
 ]
 
 if settings.DEBUG:

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-# ✅ Custom Login View
+# Custom Login View
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')

@@ -1,24 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+{% endblock %}
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-3">🧾 Admin Dashboard</h2>
+<div class="container">
+  <div class="dashboard-content">
+    <h2 class="dashboard-title">Admin Dashboard</h2>
 
-  <ul class="list-group mb-4">
-    <li class="list-group-item">👥 Total Staff: <strong>{{ total_staff }}</strong></li>
-    <li class="list-group-item">🏢 Total Departments: <strong>{{ total_departments }}</strong></li>
-    <li class="list-group-item">🎓 Total Interns: <strong>{{ total_interns }}</strong></li>
-  </ul>
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ total_staff }}</div>
+        <div class="stat-label">Total Staff</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-number">{{ total_departments }}</div>
+        <div class="stat-label">Total Departments</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-number">{{ total_interns }}</div>
+        <div class="stat-label">Total Interns</div>
+      </div>
+    </div>
 
-  <!-- 🚀 Action Buttons -->
-  <div class="d-grid gap-2">
-    <a href="{% url 'view_staff' %}" class="btn btn-success">
-      📋 Onboarding Staff
-    </a>
-    <a href="{% url 'course_list' %}" class="btn btn-primary">
-      📚 Courses
-    </a>
+    <!-- Quick Actions -->
+    <h3 class="quick-actions-title">Quick Actions</h3>
+    <div class="actions-grid">
+      <a href="{% url 'view_staff' %}" class="action-btn">
+        <i class="bi bi-person-lines-fill"></i>
+        <span>Onboardings</span>
+      </a>
+      
+      <a href="{% url 'course_list' %}" class="action-btn">
+        <i class="bi bi-journal-bookmark-fill"></i>
+        <span>Courses</span>
+      </a>
+      
+      <a href="{% url 'viewwork_assignment_userlist_staff' %}" class="action-btn">
+        <i class="bi bi-clipboard-check"></i>
+        <span>Assignments</span>
+      </a>
+    </div>
   </div>
 </div>
 {% endblock %}
