@@ -2,15 +2,21 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-3">🧾 Admin Dashboard</h2>
+<h2>Admin Dashboard</h2>
+<ul>
+    <li>Total Staff: {{ total_staff }}</li>
+    <li>Total Departments: {{ total_departments }}</li>
+    <li>Total Interns: {{ total_interns }}</li>
+</ul>
 
-  <ul class="list-group mb-4">
-    <li class="list-group-item">👥 Total Staff: <strong>{{ total_staff }}</strong></li>
-    <li class="list-group-item">🏢 Total Departments: <strong>{{ total_departments }}</strong></li>
-    <li class="list-group-item">🎓 Total Interns: <strong>{{ total_interns }}</strong></li>
-  </ul>
-
+<!-- Add Work Assignment Button -->
+<a href="{% url 'viewwork_assignment_userlist_staff' %}" class="btn btn-primary mt-3">
+    ➕ Add Work Assignment
+</a>
+  <!-- 🚀 Onboarding Button -->
+  <a href="{% url 'view_staff' %}" class="btn btn-success">
+    📋 Onboarding Staff
+  </a>
   <!-- 🚀 Action Buttons -->
   <div class="d-grid gap-2">
     <a href="{% url 'view_staff' %}" class="btn btn-success">
