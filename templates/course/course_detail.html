@@ -1,13 +1,46 @@
-<h2>{{ course.name }}</h2>
-<p>{{ course.description }}</p>
+{% extends "base.html" %}
 
-<h3>Enrolled Staff</h3>
-<ul>
-  {% for enrollment in enrollments %}
-    <li>{{ enrollment.staff.full_name }} ({{ enrollment.staff.staff_code }}) - {{ enrollment.staff.role }}</li>
-  {% empty %}
-    <li>No one enrolled yet.</li>
-  {% endfor %}
-</ul>
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">{{ course.name }}</h2>
+  <p>{{ course.description }}</p>
 
-<a href="{% url 'enroll_user' course.id %}">Enroll New Member</a>
+  <h3>Enrolled Staff</h3>
+  <ul>
+    {% for enrollment in enrollments %}
+      <li>{{ enrollment.staff.full_name }} ({{ enrollment.staff.staff_code }}) - {{ enrollment.staff.role }}</li>
+    {% empty %}
+      <li>No one enrolled yet.</li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'enroll_user' course.id %}" class="btn-success">Enroll New Member</a>
+</div>
+
+<style>
+.container {
+  max-width: 800px;
+  margin: auto;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2.mb-4 {
+  font-weight: 600;
+  color: #2d2d2d;
+}
+a.btn-success {
+  display: inline-block;
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+}
+a.btn-success:hover {
+  background-color: #218838;
+}
+</style>
+{% endblock %}

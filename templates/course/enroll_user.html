@@ -1,11 +1,70 @@
-<h2>Enroll Staff to {{ course.name }}</h2>
+{% extends "base.html" %}
 
-{% if error %}
-  <p style="color:red">{{ error }}</p>
-{% endif %}
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">👥 Enroll Staff to {{ course.name }}</h2>
 
-<form method="post">
-  {% csrf_token %}
-  Enter Staff Unicode: <input type="text" name="staff_code" required><br>
-  <button type="submit">Enroll</button>
-</form>
+  {% if error %}
+    <div class="alert-info">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <label>Enter Staff Unicode:</label>
+    <input type="text" name="staff_code" required>
+    <button type="submit" class="btn-success">Enroll</button>
+  </form>
+</div>
+
+<style>
+.container {
+  max-width: 800px;
+  margin: auto;
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h2.mb-4 {
+  font-weight: 600;
+  color: #2d2d2d;
+}
+form label {
+  font-weight: 500;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+form input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+form input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+button.btn-success {
+  background-color: #28a745;
+  color: white;
+  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+button.btn-success:hover {
+  background-color: #218838;
+}
+.alert-info {
+  background-color: #e7f3ff;
+  border: 1px solid #b3daff;
+  padding: 10px;
+  border-radius: 5px;
+  color: #004085;
+  margin-bottom: 1rem;
+}
+</style>
+{% endblock %}
