@@ -36,3 +36,4 @@ class StaffForm(forms.ModelForm):
         super(StaffForm, self).__init__(*args, **kwargs)
         self.fields['join_date'].input_formats = ['%Y-%m-%d']
         self.fields['date_of_birth'].input_formats = ['%Y-%m-%d']
+

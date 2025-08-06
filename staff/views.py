@@ -54,3 +54,37 @@ def delete_staff(request, staff_id):
     staff.delete()
     messages.success(request, "🗑️ Staff member deleted successfully.")
     return redirect('view_staff')
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from staff.models import Staff
+from workassignment.forms import WorkAssignmentForm
+
+@login_required
+def search_staff_by_code(request):
+    staff = None
+    form = None
+    staff_code = request.POST.get('staff_code', '')
+
+    if request.method == 'POST':
+        staff = Staff.objects.filter(staff_code=staff_code).first()
+        if staff:
+            if 'task_title' in request.POST:
+                form = WorkAssignmentForm(request.POST, request.FILES)
+                if form.is_valid():
+                    assignment = form.save(commit=False)
+                    assignment.assigned_to = staff
+                    assignment.save()
+                    messages.success(request, "✅ Work assignment added successfully.")
+                    return redirect('search_staff_by_code')
+                else:
+                    messages.error(request, "⚠️ Please correct the errors below.")
+            else:
+                form = WorkAssignmentForm()
+        else:
+            messages.error(request, "⚠️ Staff not found.")
+    return render(request, 'staff/search_staff_code.html', {
+        'staff': staff,
+        'form': form,
+        'staff_code': staff_code
+    })

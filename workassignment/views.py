@@ -1,15 +1,15 @@
+# views.py
 from django.shortcuts import render, get_object_or_404, redirect
 from staff.models import Staff
 from .models import WorkAssignment
 from .forms import WorkAssignmentForm
 
-
+# Home: show list of staff (employees or interns)
 def home(request):
-    # Only show staff who are Employees or Interns
     users = Staff.objects.filter(role__in=['Intern', 'Employee'], status='Active')
     return render(request, 'workassignment/user_list.html', {'users': users})
 
-
+# Detail view: show staff and their tasks
 def user_detail(request, user_id):
     user = get_object_or_404(Staff, id=user_id)
     assignments = WorkAssignment.objects.filter(assigned_to=user)
@@ -18,7 +18,7 @@ def user_detail(request, user_id):
         'assignments': assignments
     })
 
-
+# Add new task to user
 def add_assignment(request, user_id):
     user = get_object_or_404(Staff, id=user_id)
     if request.method == 'POST':
