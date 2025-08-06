@@ -28,9 +28,9 @@ class Staff(models.Model):
     ]
 
     STATUS_CHOICES = [
-        ('Active', 'Active'),
-        ('On Leave', 'On Leave'),
-        ('Resigned', 'Resigned'),
+        ('Completed', 'Completed'),
+        ('Ongoing', 'Ongoing'),
+        ('Documents pending', 'Documents pending'),
     ]
 
     GENDER_CHOICES = [

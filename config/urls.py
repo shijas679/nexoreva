@@ -5,7 +5,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('dashboard.urls')),
+    path('', include('attendance.urls')),      # << Make attendance home the default page
+    path('dashboard/', include('dashboard.urls')),  # << dashboard now at /dashboard/
     path('staff/', include('staff.urls')),
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
 ]
