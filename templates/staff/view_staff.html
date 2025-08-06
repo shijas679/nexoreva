@@ -1,17 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container mt-5">
-  <h2>📋 All Staff Members</h2>
-  <table class="table table-bordered table-striped mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>📋 All Staff Members</h2>
+    <!-- ➕ Onboarding Button -->
+    <a href="{% url 'add_staff' %}" class="btn btn-success">
+      ➕ Add New Onboarding
+    </a>
+  </div>
+
+  <table class="table table-bordered table-striped mt-3">
     <thead>
       <tr>
         <th>#</th>
+        <th>Unicode</th>
         <th>Full Name</th>
         <th>Role</th>
         <th>Department</th>
         <th>Email</th>
         <th>Join Date</th>
-        <th>Status</th>
+        <th>Onboarding Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -19,6 +27,7 @@
       {% for staff in staff_list %}
       <tr>
         <td>{{ forloop.counter }}</td>
+        <td>{{ staff.staff_code }}</td>
         <td>{{ staff.full_name }}</td>
         <td>{{ staff.role }}</td>
         <td>{{ staff.department }}</td>
@@ -26,13 +35,13 @@
         <td>{{ staff.join_date }}</td>
         <td>{{ staff.status }}</td>
         <td>
-          <a href="#" class="btn btn-sm btn-primary disabled">Edit</a>
-          <a href="#" class="btn btn-sm btn-danger disabled">Delete</a>
+          <a href="{% url 'edit_staff' staff.id %}" class="btn btn-sm btn-primary">Edit</a>
+          <a href="{% url 'delete_staff' staff.id %}" class="btn btn-sm btn-danger">Delete</a>
         </td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="8">No staff found.</td>
+        <td colspan="9">No staff found.</td>
       </tr>
       {% endfor %}
     </tbody>
