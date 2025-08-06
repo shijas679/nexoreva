@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-4">
+    <h2>📋 Work Assignment User List</h2>
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Unicode</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Assigned Work</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in user_data %}
+            <tr>
+                <td>{{ item.unicode }}</td>
+                <td>{{ item.username }}</td>
+                <td>{{ item.role }}</td>
+                <td>{{ item.assignment }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                    <a href="{% url 'add_assignment' item.id %}" class="btn btn-sm btn-primary">Assign</a>
+                    <a href="{% url 'edit_assignment' item.assignment_id %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'delete_assignment' item.assignment_id %}" class="btn btn-sm btn-danger">Delete</a>
+
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

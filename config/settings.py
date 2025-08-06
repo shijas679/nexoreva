@@ -24,10 +24,15 @@ INSTALLED_APPS = [
     # Your apps
     'staff',
     'dashboard',
+    'course',
     'attendance',
 
     # Third-party
     'crispy_forms',
+    'workassignment',
+    
+
+
 ]
 
 # Crispy Forms Settings
