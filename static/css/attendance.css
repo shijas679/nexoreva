@@ -1,0 +1,252 @@
+/* Container basics (if you want to wrap content in a container, you can add one) */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f8f8;
+  color: #222;
+  padding: 2rem 1rem;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #232323;
+}
+
+/* Form Styling */
+form {
+  max-width: 400px;
+  margin: 0 auto 2rem auto;
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+form input[type="text"],
+form select {
+  width: 100%;
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+  border: 1.5px solid #bbb;
+  border-radius: 7px;
+  box-sizing: border-box;
+  color: #222;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+form input[type="text"]:focus,
+form select:focus {
+  outline: none;
+  border-color: #222;
+  box-shadow: 0 0 6px rgba(34, 34, 34, 0.22);
+}
+
+/* Submit button */
+form button[type="submit"] {
+  background-color: #232323;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1.2rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+form button[type="submit"]:hover,
+form button[type="submit"]:focus {
+  background-color: #444;
+  outline: none;
+}
+
+/* Buttons outside form */
+a > button[type="button"] {
+  display: inline-block;
+  margin: 0 0.5rem 1rem 0.5rem;
+  padding: 0.56rem 1.3rem;
+  background-color: #232323;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.25s ease;
+  user-select: none;
+}
+
+a > button[type="button"]:hover,
+a > button[type="button"]:focus {
+  background-color: #444;
+  outline: none;
+}
+
+/* Message list styling */
+ul {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  color: #a33;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+}
+
+ul li {
+  background-color: #fee;
+  border: 1px solid #faa;
+  padding: 0.75rem 1rem;
+  border-radius: 7px;
+  margin-bottom: 0.75rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  form, ul {
+    max-width: 100%;
+    padding: 1.5rem 1.8rem;
+  }
+
+  a > button[type="button"] {
+    width: 100%;
+    margin: 0 0 1rem 0;
+  }
+}
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f8f8;
+  color: #222;
+  padding: 2rem 1rem;
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #232323;
+}
+
+/* ====== Generic Form Box ====== */
+form {
+  max-width: 430px;
+  margin: 0 auto 2rem auto;
+  background: #fff;
+  padding: 2rem 2.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+}
+
+form p {
+  margin-bottom: 1.25em;
+}
+
+form label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.4em;
+}
+
+/* Field styling for Django crispy/form.as_p */
+form input[type="text"],
+form input[type="number"],
+form input[type="email"],
+form input[type="date"],
+form input[type="password"],
+form select,
+form textarea {
+  width: 100%;
+  padding: 0.54rem 1rem;
+  font-size: 1rem;
+  border: 1.5px solid #bbb;
+  border-radius: 7px;
+  box-sizing: border-box;
+  color: #222;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  margin-bottom: 0.7em;
+}
+
+form input:focus,
+form select:focus,
+form textarea:focus {
+  outline: none;
+  border-color: #222;
+  box-shadow: 0 0 6px rgba(34, 34, 34, 0.22);
+}
+
+/* Submit button */
+form button[type="submit"] {
+  background-color: #232323;
+  color: #fff;
+  font-weight: 600;
+  padding: 0.7rem 1.1rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+  margin-top: 0.5rem;
+}
+
+form button[type="submit"]:hover,
+form button[type="submit"]:focus {
+  background-color: #444;
+  outline: none;
+}
+
+/* ====== Back Link ====== */
+a {
+  color: #232323;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 auto 2rem auto;
+  font-weight: 600;
+  padding: 0.5em 0;
+  text-align: center;
+}
+
+a:hover, a:focus {
+  text-decoration: underline;
+}
+
+/* ====== Message List Styling ====== */
+ul {
+  max-width: 400px;
+  margin: 1.5rem auto 0 auto;
+  padding: 0;
+  list-style: none;
+  color: #a33;
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+}
+
+ul li {
+  background-color: #fee;
+  border: 1px solid #faa;
+  padding: 0.75rem 1rem;
+  border-radius: 7px;
+  margin-bottom: 0.75rem;
+}
+
+/* ====== Optional: vertical center for small content ====== */
+@media (min-height: 600px) {
+  body:has(form) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+  }
+}
