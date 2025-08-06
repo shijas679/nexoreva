@@ -26,8 +26,9 @@
         <td>{{ staff.join_date }}</td>
         <td>{{ staff.status }}</td>
         <td>
-          <a href="#" class="btn btn-sm btn-primary disabled">Edit</a>
-          <a href="#" class="btn btn-sm btn-danger disabled">Delete</a>
+          <a href="{% url 'edit_staff' staff.id %}" class="btn btn-sm btn-primary">Edit</a>
+          <!-- Optional: Enable this only after delete is implemented -->
+          <a href="{% url 'delete_staff' staff.id %}" class="btn btn-sm btn-danger">Delete</a>
         </td>
       </tr>
       {% empty %}

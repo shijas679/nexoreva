@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-4">✏️ Edit Staff Details</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-info">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- 🧍 Basic Info -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">🧍 Basic Information</legend>
+      {{ form.full_name.label_tag }} {{ form.full_name }}
+      {{ form.role.label_tag }} {{ form.role }}
+      {{ form.department.label_tag }} {{ form.department }}
+      {{ form.designation.label_tag }} {{ form.designation }}
+      {{ form.employment_type.label_tag }} {{ form.employment_type }}
+      {{ form.reporting_manager.label_tag }} {{ form.reporting_manager }}
+      {{ form.join_date.label_tag }} {{ form.join_date }}
+    </fieldset>
+
+    <!-- 📞 Contact Info -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📞 Contact Details</legend>
+      {{ form.email.label_tag }} {{ form.email }}
+      {{ form.phone.label_tag }} {{ form.phone }}
+      {{ form.emergency_contact.label_tag }} {{ form.emergency_contact }}
+    </fieldset>
+
+    <!-- 📍 Personal Info -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📍 Personal Details</legend>
+      {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}
+      {{ form.gender.label_tag }} {{ form.gender }}
+      {{ form.address.label_tag }} {{ form.address }}
+    </fieldset>
+
+    <!-- 📁 Documents -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📁 Documents</legend>
+      {{ form.id_proof.label_tag }} {{ form.id_proof }}
+      {{ form.resume.label_tag }} {{ form.resume }}
+      {{ form.offer_letter.label_tag }} {{ form.offer_letter }}
+      {{ form.photo.label_tag }} {{ form.photo }}
+    </fieldset>
+
+    <!-- 🆔 Unique Staff Code -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">🆔 Staff Code</legend>
+      {{ form.staff_code.label_tag }} {{ form.staff_code }}
+    </fieldset>
+
+    <!-- 📜 Status and Notes -->
+    <fieldset class="border p-3 mb-4">
+      <legend class="w-auto">📜 Status & Notes</legend>
+      {{ form.status.label_tag }} {{ form.status }}
+      {{ form.admin_notes.label_tag }} {{ form.admin_notes }}
+    </fieldset>
+
+    <button type="submit" class="btn btn-success">Update Staff</button>
+  </form>
+</div>
+
+<!-- ✅ Load dynamic JS logic -->
+<script src="{% static 'js/staff_code.js' %}"></script>
+{% endblock %}
