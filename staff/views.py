@@ -43,3 +43,14 @@ def edit_staff(request, staff_id):
     else:
         form = StaffForm(instance=staff)
     return render(request, 'staff/edit_staff.html', {'form': form, 'staff': staff})
+
+from django.shortcuts import get_object_or_404
+from django.contrib import messages
+from django.shortcuts import redirect
+
+@login_required
+def delete_staff(request, staff_id):
+    staff = get_object_or_404(Staff, id=staff_id)
+    staff.delete()
+    messages.success(request, "🗑️ Staff member deleted successfully.")
+    return redirect('view_staff')
