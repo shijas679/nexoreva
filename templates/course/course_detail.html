@@ -1,0 +1,13 @@
+<h2>{{ course.name }}</h2>
+<p>{{ course.description }}</p>
+
+<h3>Enrolled Members</h3>
+<ul>
+  {% for enrollment in enrollments %}
+    <li>{{ enrollment.user.username }} ({{ enrollment.user.userprofile.unicode }})</li>
+  {% empty %}
+    <li>No one enrolled yet.</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'enroll_user' course.id %}">Enroll New Member</a>

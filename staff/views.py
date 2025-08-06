@@ -1,3 +1,4 @@
+
 from django.shortcuts import render, redirect
 from .forms import StaffForm
 from django.contrib import messages
@@ -26,4 +27,3 @@ from django.contrib.auth.decorators import login_required
 def view_staff(request):
     staff_list = Staff.objects.all().order_by('-id')  # Latest first
     return render(request, 'staff/view_staff.html', {'staff_list': staff_list})
-
