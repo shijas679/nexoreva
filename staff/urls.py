@@ -1,3 +1,5 @@
+# staff/urls.py
+
 from django.urls import path
 from .views import add_staff, view_staff, edit_staff, delete_staff
 from .views import search_staff_by_code
@@ -11,4 +13,3 @@ urlpatterns = [
     path('search-staff/', search_staff_by_code, name='search_staff_by_code'),
 
 ]
-

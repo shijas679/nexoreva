@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     # Your apps
     'staff',
     'dashboard',
+    'course',
     'attendance',
 
     # Third-party
