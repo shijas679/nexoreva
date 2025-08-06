@@ -1,0 +1,10 @@
+<h2>Courses</h2>
+<a href="{% url 'add_course' %}">Add Course</a>
+<ul>
+  {% for course in courses %}
+    <li>
+      {{ course.name }} ({{ course.start_date }} - {{ course.end_date }})
+      <a href="{% url 'course_detail' course.id %}">View More</a>
+    </li>
+  {% endfor %}
+</ul>
