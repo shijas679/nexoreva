@@ -24,15 +24,10 @@ INSTALLED_APPS = [
     # Your apps
     'staff',
     'dashboard',
+    'attendance',
 
     # Third-party
     'crispy_forms',
-<<<<<<< HEAD
-    'attendance',
-
-
-=======
->>>>>>> f5cf8ae058cc2e7ce1a8dfe72ade2f7808dec3c4
 ]
 
 # Crispy Forms Settings

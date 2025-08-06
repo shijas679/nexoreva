@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Leave Requests</h2>
+<table border="1">
+  <tr>
+    <th>Requested On</th>
+    <th>Staff Name</th>
+    <th>Staff Code</th>
+    <th>From Date</th>
+    <th>To Date</th>
+    <th>Reason</th>
+    <th>Status</th>
+  </tr>
+  {% for record in records %}
+  <tr>
+    <td>{{ record.request_date|date:"Y-m-d H:i" }}</td>
+    <td>{{ record.staff.full_name }}</td>
+    <td>{{ record.staff.staff_code }}</td>
+    <td>{{ record.from_date }}</td>
+    <td>{{ record.to_date }}</td>
+    <td>{{ record.reason }}</td>
+    <td>{{ record.status }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<a href="{% url 'attendance_home' %}">Back</a>
+{% endblock %}

@@ -26,8 +26,6 @@ from django.contrib.auth.decorators import login_required
 def view_staff(request):
     staff_list = Staff.objects.all().order_by('-id')  # Latest first
     return render(request, 'staff/view_staff.html', {'staff_list': staff_list})
-<<<<<<< HEAD
-=======
 
 from django.shortcuts import get_object_or_404
 
@@ -56,4 +54,3 @@ def delete_staff(request, staff_id):
     staff.delete()
     messages.success(request, "🗑️ Staff member deleted successfully.")
     return redirect('view_staff')
->>>>>>> f5cf8ae058cc2e7ce1a8dfe72ade2f7808dec3c4
