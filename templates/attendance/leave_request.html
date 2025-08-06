@@ -1,0 +1,14 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Leave Request</h2>
+<form method="post">
+  {% csrf_token %} {{ form.as_p }}
+  <button type="submit">Submit Leave Request</button>
+</form>
+<a href="{% url 'attendance_home' %}">Back to Attendance</a>
+{% if messages %}
+<ul>
+  {% for msg in messages %}
+  <li>{{ msg }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endblock %}
