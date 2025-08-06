@@ -22,9 +22,14 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('dashboard.urls')),
+<<<<<<< HEAD
     path('staff/', include('staff.urls')), 
     path('attendance/', include('attendance.urls')),
 
+=======
+    path('staff/', include('staff.urls')),
+    
+>>>>>>> f5cf8ae058cc2e7ce1a8dfe72ade2f7808dec3c4
 ]
 
 if settings.DEBUG:
