@@ -1,4 +1,4 @@
-<h2>Enroll User to {{ course.name }}</h2>
+<h2>Enroll Staff to {{ course.name }}</h2>
 
 {% if error %}
   <p style="color:red">{{ error }}</p>
@@ -6,6 +6,6 @@
 
 <form method="post">
   {% csrf_token %}
-  Enter Unicode: <input type="text" name="unicode" required><br>
+  Enter Staff Unicode: <input type="text" name="staff_code" required><br>
   <button type="submit">Enroll</button>
 </form>

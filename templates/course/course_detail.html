@@ -1,10 +1,10 @@
 <h2>{{ course.name }}</h2>
 <p>{{ course.description }}</p>
 
-<h3>Enrolled Members</h3>
+<h3>Enrolled Staff</h3>
 <ul>
   {% for enrollment in enrollments %}
-    <li>{{ enrollment.user.username }} ({{ enrollment.user.userprofile.unicode }})</li>
+    <li>{{ enrollment.staff.full_name }} ({{ enrollment.staff.staff_code }}) - {{ enrollment.staff.role }}</li>
   {% empty %}
     <li>No one enrolled yet.</li>
   {% endfor %}

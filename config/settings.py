@@ -24,7 +24,7 @@ INSTALLED_APPS = [
     # Your apps
     'staff',
     'dashboard',
-
+    'course',
     # Third-party
     'crispy_forms',
 ]
