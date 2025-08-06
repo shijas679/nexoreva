@@ -25,6 +25,8 @@ INSTALLED_APPS = [
     'staff',
     'dashboard',
     'course',
+    'attendance',
+
     # Third-party
     'crispy_forms',
 ]
