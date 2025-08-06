@@ -27,12 +27,8 @@ urlpatterns = [
 
     # Core modules
     path('', include('dashboard.urls')),
-
-    # Staff module
     path('staff/', include('staff.urls')),
-
-    # Course module
-    path('courses/', include('course.urls')),  # ✅ moved here correctly
+    
 ]
 
 if settings.DEBUG:
