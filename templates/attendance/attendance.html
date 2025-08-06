@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+  {% block content %}
+  <h2>Attendance</h2>
+  <form method="post" action="{% url 'time_in' %}">
+    {% csrf_token %}
+    <input type="text"><br>
+    <button type="submit">Time In</button>
+  </form>
+
+  <form method="post" action="{% url 'time_out' %}">
+    {% csrf_token %}
+    <button type="submit">Time Out</button>
+  </form>
+  {% endblock %}
+</main>
