@@ -1,0 +1,71 @@
+body {
+    background: #f6f8fb;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    min-height: 100vh;
+}
+
+.main-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 32px rgba(44,62,80,0.11), 0 1.5px 8px rgba(44,62,80,0.18);
+    max-width: 800px;
+    margin: 56px auto 32px auto;
+    padding: 38px 34px 30px 34px;
+}
+
+.leave-title {
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: #253553;
+}
+
+/* Table Styles */
+.leave-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 1.5px 8px rgba(44,62,80,0.07);
+    margin-bottom: 15px;
+    font-size: 1rem;
+}
+.leave-table th, .leave-table td {
+    padding: 13px 8px;
+    text-align: center;
+    border: none;
+}
+.leave-table th {
+    background: #f7f9fa;
+    color: #32435b;
+    font-weight: 600;
+    border-bottom: 2px solid #ececec;
+    letter-spacing: 0.03em;
+}
+.leave-table tr:not(:last-child) td {
+    border-bottom: 1px solid #f1f2f7;
+}
+.leave-table tr:hover { background: #f5faff; }
+
+.back-link {
+    display: inline-block;
+    margin-top: 18px;
+    color: #1762ae;
+    font-weight: 500;
+    border-radius: 4px;
+    padding: 8px 18px;
+    background: #e9f0fe;
+    text-decoration: none;
+    transition: background 0.13s;
+}
+.back-link:hover {
+    background: #d5e3fd;
+}
+
+@media (max-width: 700px) {
+    .main-card { padding: 10px 3vw; max-width: 99vw; }
+    .leave-table th, .leave-table td { padding: 7px 2px; font-size: 14px;}
+}

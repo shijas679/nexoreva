@@ -1,36 +1,60 @@
-<table border="1">
-    <thead>
-        <tr>
-            <th>Staff Name</th>
-            <th>Date</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for data in attendance_details %}  <!-- ✅ corrected -->
-        <tr>
-            <td>{{ data.staff.full_name }}</td>
-            <td>{{ data.date }}</td>
-            <td>{{ data.time_in|default:"--" }}</td>
-            <td>{{ data.time_out|default:"--" }}</td>
-            <td>
-                {% if data.status == "On Leave" %}
-                    <form method="get" action="{% url 'leave_details' data.staff.id %}">
-                        <button type="submit" style="background-color: #ffcccb; border: none; padding: 5px 10px; cursor: pointer;">
-                            On Leave
-                        </button>
-                    </form>
-                {% else %}
-                    {{ data.status }}
-                {% endif %}
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No attendance data available.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Attendance List</title>
+    <link rel="stylesheet" href="{% static 'css/attendance_list.css' %}">
+</head>
+<body>
+<div class="main-card">
+
+    <form method="get" class="attendance-filter-form">
+        <input type="text" name="q" placeholder="Search staff by name" value="{{ search_query|default_if_none:'' }}">
+        <select name="status">
+            <option value="">-- All Status --</option>
+            <option value="Present" {% if status_filter == "Present" %}selected{% endif %}>Present</option>
+            <option value="On Leave" {% if status_filter == "On Leave" %}selected{% endif %}>On Leave</option>
+            <option value="Absent" {% if status_filter == "Absent" %}selected{% endif %}>Absent</option>
+        </select>
+        <button type="submit">Search</button>
+    </form>
+
+    <table class="attendance-table">
+        <thead>
+            <tr>
+                <th>Staff Name</th>
+                <th>Date</th>
+                <th>Time In</th>
+                <th>Time Out</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in attendance_details %}
+            <tr>
+                <td>{{ data.staff.full_name }}</td>
+                <td>{{ data.date }}</td>
+                <td>{{ data.time_in|default:"--" }}</td>
+                <td>{{ data.time_out|default:"--" }}</td>
+                <td>
+                    {% if data.status == "On Leave" %}
+                        <form method="get" action="{% url 'leave_details' data.staff.id %}" style="display:inline;">
+                            <button type="submit" class="on-leave-btn">
+                                On Leave
+                            </button>
+                        </form>
+                    {% else %}
+                        {{ data.status }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No attendance data available.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

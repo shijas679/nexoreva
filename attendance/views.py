@@ -8,6 +8,7 @@ from .forms import StaffCodeForm, LeaveRequestForm
 from django.contrib.auth.decorators import login_required
 from .models import Attendance
 from datetime import date
+from django.db.models import Q
 
 
 def attendance_home(request):
@@ -77,17 +78,20 @@ def leave_request(request):
 
     return render(request, 'attendance/leave_request.html', {'form': form})
 
-def attendance_details(request):  # ✅ function name updated
+def attendance_details(request):
     today = date.today()
-    all_staff = Staff.objects.all()
-    attendance_details = []  # ✅ variable name updated
+    search_query = request.GET.get('q', '').strip()
+    status_filter = request.GET.get('status', '')
 
+    all_staff = Staff.objects.all()
+    if search_query:
+        all_staff = all_staff.filter(Q(full_name__icontains=search_query))
+
+    attendance_details = []
     for staff in all_staff:
         attendance = Attendance.objects.filter(staff=staff, date=today).first()
         on_leave = LeaveRequest.objects.filter(
-            staff=staff,
-            from_date__lte=today,
-            to_date__gte=today
+            staff=staff, from_date__lte=today, to_date__gte=today
         ).exists()
 
         if attendance:
@@ -101,18 +105,27 @@ def attendance_details(request):  # ✅ function name updated
             status = "Absent"
             time_in = time_out = None
 
+        # Move the dash-class construction here
+        status_class = status.lower().replace(' ', '-')
+
+        # Filter by status, if selected
+        if status_filter and status != status_filter:
+            continue
+
         attendance_details.append({
             'staff': staff,
             'date': today,
             'time_in': time_in,
             'time_out': time_out,
-            'status': status
+            'status': status,
+            'status_class': status_class,  # pass preprocessed class
         })
 
     return render(request, 'attendance/attendence_list.html', {
-        'attendance_details': attendance_details  # ✅ updated
+        'attendance_details': attendance_details,
+        'search_query': search_query,
+        'status_filter': status_filter,
     })
-
 
 def leave_details(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)

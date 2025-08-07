@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load crispy_forms_tags %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/attendance.css' %}">
 {% endblock %}
- {% block content %}
+
+{% block content %}
 <h2>Leave Requests</h2>
-<table border="1">
+<table>
   <tr>
     <th>Requested On</th>
     <th>Staff Name</th>
@@ -28,5 +28,5 @@
   </tr>
   {% endfor %}
 </table>
-<a href="{% url 'attendance_home' %}">Back</a>
+<a class="back-link" href="{% url 'attendance_home' %}">Back</a>
 {% endblock %}

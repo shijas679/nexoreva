@@ -1,41 +1,3 @@
-<<<<<<< HEAD
-{% extends 'base.html' %}
-
-{% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Leave Request</h2>
-
-    {% if messages %}
-    <div class="alert alert-info">
-        <ul class="mb-0">
-            {% for msg in messages %}
-                <li>{{ msg }}</li>
-            {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    <form method="post" class="mb-3">
-        {% csrf_token %}
-        {% for field in form %}
-        <div class="mb-3">
-            <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-            {{ field }}
-            {% if field.help_text %}
-            <div class="form-text">{{ field.help_text }}</div>
-            {% endif %}
-            {% for error in field.errors %}
-            <div class="text-danger">{{ error }}</div>
-            {% endfor %}
-        </div>
-        {% endfor %}
-        <button type="submit" class="btn btn-primary">Submit Leave Request</button>
-    </form>
-
-    <a href="{% url 'attendance_home' %}" class="btn btn-secondary">Back to Attendance</a>
-</div>
-{% endblock %}
-=======
 {% extends 'base.html' %} 
 {% load static %}
 {% load crispy_forms_tags %}
@@ -56,4 +18,3 @@
   {% endfor %}
 </ul>
 {% endif %} {% endblock %}
->>>>>>> 28e399ea911099c4bdee3ba6522c8c812e4f67e4

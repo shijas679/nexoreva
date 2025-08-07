@@ -96,11 +96,7 @@ class Staff(models.Model):
     def __str__(self):
         return self.full_name
 
-<<<<<<< HEAD
     class Meta:
         ordering = ['full_name']
         verbose_name = 'Staff Member'
         verbose_name_plural = 'Staff Members'
-=======
-
->>>>>>> 28e399ea911099c4bdee3ba6522c8c812e4f67e4

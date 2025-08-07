@@ -1,17 +1,4 @@
 {% extends 'base.html' %}
-<<<<<<< HEAD
-
-{% block content %}
-<h2>Dashboard</h2>
-
-<ul>
-    <li>Total Staff: {{ total_staff }}</li>
-    <li>Total Departments: {{ total_departments }}</li>
-    <li>Total Interns: {{ total_interns }}</li>
-</ul>
-
-<a href="{% url 'attendence_details' %}">Attendance Records</a>
-=======
 {% load static %}
 {% load crispy_forms_tags %}
 {% block extra_css %}
@@ -59,9 +46,12 @@
       <a href="{% url 'viewwork_assignment_userlist_staff' %}" class="action-btn">
         <i class="bi bi-clipboard-check"></i>
         <span>Assignments</span>
+
+      <a href="{% url 'attendence_details' %}" class="action-btn">
+        <i class="bi bi-clipboard-check"></i>
+        <span>Attendance Report</span>
       </a>
     </div>
   </div>
 </div>
->>>>>>> 28e399ea911099c4bdee3ba6522c8c812e4f67e4
 {% endblock %}
