@@ -53,7 +53,7 @@ def viewwork_assignment_userlist_staff(request):
                 'username': user.full_name,
                 'role': user.role,
                 'assignment': assign.task_title,
-                'status': "Pending",  # You can update this if WorkAssignment has a real status field
+                'status': assign.status,  # You can update this if WorkAssignment has a real status field
                 'assignment_id': assign.id
             })
     return render(request, 'workassignment/assignment_userlist.html', {
