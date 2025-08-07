@@ -1,0 +1,13 @@
+<h2>{{ course.name }}</h2>
+<p>{{ course.description }}</p>
+
+<h3>Enrolled Staff</h3>
+<ul>
+  {% for enrollment in enrollments %}
+    <li>{{ enrollment.staff.full_name }} ({{ enrollment.staff.staff_code }}) - {{ enrollment.staff.role }}</li>
+  {% empty %}
+    <li>No one enrolled yet.</li>
+  {% endfor %}
+</ul>
+
+<a href="{% url 'enroll_user' course.id %}">Enroll New Member</a>

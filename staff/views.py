@@ -1,3 +1,5 @@
+
+from django.shortcuts import render, redirect
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import StaffForm
 from .models import Staff
@@ -23,10 +25,12 @@ def add_staff(request):
 
             staff.save()
             messages.success(request, "✅ Staff member added successfully.")
-            return redirect('add_staff')
+            return redirect('view_staff')
         else:
             messages.error(request, "⚠️ Please correct the errors below.")
     else:
+
+
         form = StaffForm()
 
     return render(request, 'staff/add_staff.html', {'form': form})
@@ -60,3 +64,34 @@ def delete_staff(request, staff_id):
     staff.delete()
     messages.success(request, "🗑️ Staff member deleted successfully.")
     return redirect('view_staff')
+
+from django.db.models import Q
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def view_staff(request):
+    staff_list = Staff.objects.all().order_by('-id')  # default list
+
+    # Filter by role
+    role_filter = request.GET.get('sort', '')
+    if role_filter in ['Employee', 'Intern']:
+        staff_list = staff_list.filter(role=role_filter)
+    # if role_filter is 'All' or empty, show all (no filter)
+
+    # Search by name, email, or Unicode (staff_code)
+    query = request.GET.get('search', '')
+    if query is None or query.lower() == 'none':
+        query = ''
+
+    if query:
+        staff_list = staff_list.filter(
+            Q(full_name__icontains=query) |
+            Q(email__icontains=query) |
+            Q(staff_code__icontains=query)
+        )
+
+    return render(request, 'staff/view_staff.html', {
+        'staff_list': staff_list,
+        'selected_role': role_filter,
+        'search_query': query  # Send cleaned query string
+    })
