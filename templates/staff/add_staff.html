@@ -2,11 +2,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/add_staff.css' %}">
+<link rel="stylesheet" href="{% static 'css/staff.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+
   <h2 class="mb-4">➕ Add New Staff</h2>
 
   {% if messages %}
@@ -86,7 +86,7 @@
 
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
-</div>
+<!-- </div> -->
 
 <!-- ✅ Load dynamic JS logic -->
 <script src="{% static 'js/staff_code.js' %}?v=1.0.3"></script>
