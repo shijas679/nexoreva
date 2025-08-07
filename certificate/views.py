@@ -50,10 +50,10 @@ def generate_certificate(request):
 
                 # Name on the big line
                 name_font = get_font(name, font_path, max_width=1000, max_size=65)
-                center_text(draw, name, name_font, y=525, image_width=image_width)  # Slightly higher
+                center_text(draw, name, name_font, y=520, image_width=image_width)  # Slightly higher
 
                 # Separated role text
-                role_text = f"Successfully completed the {role}"
+                role_text = f"Successfully completed the {role} Course"
                 role_font = get_font(role_text, font_path, max_width=1000, max_size=40)
                 center_text(draw, role_text, role_font, y=600, image_width=image_width)
 
