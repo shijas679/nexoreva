@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'course_css/enroll_user.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">👥 Enroll Staff to {{ course.name }}</h2>
+
+  {% if error %}
+    <div class="alert-info">{{ error }}</div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <label>Enter Staff Unicode:</label>
+    <input type="text" name="staff_code" required>
+    <button type="submit" class="btn-success">Enroll</button>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'course_css/course_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Course Details</h2>
+  
+  <!-- Course Details Table -->
+  <table class="enroll-table">
+    <thead>
+      <tr>
+        <th>Attribute</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Course Name</td>
+        <td>{{ course.name }}</td>
+      </tr>
+      <tr>
+        <td>Description</td>
+        <td>{{ course.description }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="mt-4">Enrolled Staff</h3>
+
+  {% if enrollments %}
+    <table class="enroll-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Full Name</th>
+          <th>Staff Code</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for enrollment in enrollments %}
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ enrollment.staff.full_name }}</td>
+            <td>{{ enrollment.staff.staff_code }}</td>
+            <td>{{ enrollment.staff.role }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No one enrolled yet.</p>
+  {% endif %}
+
+  <div class="btn-container">
+    <a href="{% url 'enroll_user' course.id %}" class="btn-success">Enroll New Member</a>
+  </div>
+</div>
+
+{% endblock %}
