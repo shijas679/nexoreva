@@ -1,49 +1,42 @@
 {% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'course_css/course_list.css' %}">
+{% endblock %}
 
 {% block content %}
 <div class="container">
   <h2 class="mb-4">📘 Courses</h2>
 
-  <a href="{% url 'add_course' %}" class="btn-success">Add Course</a>
-  <ul>
-    {% for course in courses %}
-      <li>
-        {{ course.name }} ({{ course.start_date }} - {{ course.end_date }})
-        <a href="{% url 'course_detail' course.id %}">View More</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+
+  <table class="course-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Course Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ course.name }}</td>
+        <td>{{ course.start_date }}</td>
+        <td>{{ course.end_date }}</td>
+        <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No courses available.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 
-<style>
-.container {
-  max-width: 800px;
-  margin: auto;
-  background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-h2.mb-4 {
-  font-weight: 600;
-  color: #2d2d2d;
-}
-a.btn-success {
-  display: inline-block;
-  background-color: #28a745;
-  color: white;
-  padding: 0.6rem 1.2rem;
-  text-decoration: none;
-  border-radius: 6px;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-a.btn-success:hover {
-  background-color: #218838;
-}
-ul {
-  list-style-type: disc;
-  padding-left: 1.5rem;
-}
-</style>
 {% endblock %}
