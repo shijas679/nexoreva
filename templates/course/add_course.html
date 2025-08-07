@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'course_css/add_course.css' %}">
+<link rel="stylesheet" href="{% static 'course_css/add-course.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
   <h2 class="mb-4">📚 Add New Course</h2>
-  
+
   <form method="POST">
     {% csrf_token %}
     <fieldset>
@@ -17,6 +18,16 @@
       <div class="mb-2">
         <label for="{{ form.name.id_for_label }}">Course Name:</label>
         {{ form.name }}
+      </div>
+
+      <div class="mb-2">
+        <label for="{{ form.sub_column.id_for_label }}">Sub Column:</label>
+        {{ form.sub_column }}
+      </div>
+
+      <div class="mb-2">
+        <label for="{{ form.unicode.id_for_label }}">Unicode:</label>
+        {{ form.unicode }}
       </div>
 
       <div class="mb-2">
@@ -33,10 +44,118 @@
         <label for="{{ form.end_date.id_for_label }}">End Date:</label>
         {{ form.end_date }}
       </div>
+
+      <div class="mb-2">
+        <label for="{{ form.fees.id_for_label }}">Fees (₹):</label>
+        {{ form.fees }}
+      </div>
     </fieldset>
 
-    <button type="submit" class="btn-success">Create Course</button>
+    <button type="submit" class="btn btn-success mt-3">Create Course</button>
   </form>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+// Define the sub column options for each course
+const subColumnOptions = {
+  'IT': ['Web Development', 'Data Science', 'Networking', 'Cyber Security'],
+  'Engineering': ['Computer Science Engineering (CSE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering'],
+  'Medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)']
+};
+
+// Function to generate unicode
+function generateUnicode() {
+  const courseSelect = document.getElementById('id_name');
+  const unicodeField = document.getElementById('id_unicode');
+  
+  if (!courseSelect || !unicodeField) {
+    return;
+  }
+  
+  const selectedCourse = courseSelect.value;
+  let prefix = '';
+  
+  if (selectedCourse === 'IT') {
+    prefix = 'IT';
+  } else if (selectedCourse === 'Engineering') {
+    prefix = 'ENG';
+  } else if (selectedCourse === 'Medical') {
+    prefix = 'MED';
+  } else {
+    prefix = 'GEN';
+  }
+  
+  // Generate 5 random digits
+  const digits = Math.floor(10000 + Math.random() * 90000);
+  const unicode = `${prefix}${digits}`;
+  
+  unicodeField.value = unicode;
+  console.log('Generated unicode:', unicode);
+}
+
+// Function to update sub column options
+function updateSubColumns() {
+  const courseSelect = document.getElementById('id_name');
+  const subColumnSelect = document.getElementById('id_sub_column');
+  
+  if (!courseSelect || !subColumnSelect) {
+    console.log('Select elements not found');
+    return;
+  }
+  
+  const selectedCourse = courseSelect.value;
+  console.log('Selected course:', selectedCourse);
+  
+  const options = subColumnOptions[selectedCourse] || [];
+  console.log('Available options:', options);
+  
+  // Clear existing options
+  subColumnSelect.innerHTML = '<option value="">---------</option>';
+  
+  // Add new options
+  options.forEach(sub => {
+    const option = document.createElement('option');
+    option.value = sub;
+    option.textContent = sub;
+    subColumnSelect.appendChild(option);
+  });
+  
+  // Generate new unicode when course changes
+  generateUnicode();
+  
+  console.log('Sub column updated');
+}
+
+// Function to handle sub column change
+function handleSubColumnChange() {
+  const subColumnSelect = document.getElementById('id_sub_column');
+  if (subColumnSelect && subColumnSelect.value) {
+    // Generate new unicode when sub column changes
+    generateUnicode();
+  }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  const courseSelect = document.getElementById('id_name');
+  const subColumnSelect = document.getElementById('id_sub_column');
+  
+  if (courseSelect && subColumnSelect) {
+    console.log('Elements found, setting up event listeners');
+    
+    // Add event listener for course selection change
+    courseSelect.addEventListener('change', updateSubColumns);
+    
+    // Add event listener for sub column change
+    subColumnSelect.addEventListener('change', handleSubColumnChange);
+    
+    // Initialize sub columns based on current selection
+    updateSubColumns();
+  } else {
+    console.log('Required elements not found');
+  }
+});
+</script>
 {% endblock %}
