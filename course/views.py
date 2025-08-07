@@ -9,13 +9,20 @@ from .models import Course, Enrollment
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'description', 'start_date', 'end_date']
+        fields = ['name', 'sub_column', 'description', 'start_date', 'end_date', 'fees']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter course name'}),
+            'name': forms.Select(attrs={'class': 'form-control', 'id': 'id_name'}),
+            'sub_column': forms.Select(attrs={'class': 'form-control', 'id': 'id_sub_column'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter course description'}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'fees': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter fees amount'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Empty by default; JS will populate based on course selection
+        self.fields['sub_column'].choices = [('', '---------')]
 
 def course_list(request):
     courses = Course.objects.all()
@@ -63,3 +70,14 @@ def enroll_user(request, course_id):
         return redirect('course_detail', course_id=course.id)
 
     return render(request, 'course/enroll_user.html', {'course': course})
+
+def edit_course(request, course_id):
+    course = get_object_or_404(Course, id=course_id)
+    if request.method == 'POST':
+        form = CourseForm(request.POST, instance=course)
+        if form.is_valid():
+            form.save()
+            return redirect('course_list')
+    else:
+        form = CourseForm(instance=course)
+    return render(request, 'course/edit_course.html', {'form': form, 'course': course})
