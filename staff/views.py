@@ -24,10 +24,10 @@ def add_staff(request):
                         break
 
             staff.save()
-            messages.success(request, "✅ Staff member added successfully.")
+            messages.success(request, " Staff member added successfully.")
             return redirect('view_staff')
         else:
-            messages.error(request, "⚠️ Please correct the errors below.")
+            messages.error(request, " Please correct the errors below.")
     else:
 
 
@@ -50,10 +50,10 @@ def edit_staff(request, staff_id):
             updated_staff = form.save(commit=False)
             updated_staff.staff_code = staff.staff_code  # keep old code
             updated_staff.save()
-            messages.success(request, "✅ Staff details updated successfully.")
+            messages.success(request, " Staff details updated successfully.")
             return redirect('view_staff')
         else:
-            messages.error(request, "⚠️ Please correct the errors.")
+            messages.error(request, " Please correct the errors.")
     else:
         form = StaffForm(instance=staff)
     return render(request, 'staff/edit_staff.html', {'form': form, 'staff': staff})
