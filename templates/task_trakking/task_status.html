@@ -1,0 +1,40 @@
+<form method="post">
+    {% csrf_token %}
+
+    <!-- Staff Code Input -->
+    <input type="text" placeholder="Enter staff_code" name="staff_code" value="{{ request.POST.staff_code }}" required>
+    <button type="submit">Fetch Tasks</button>
+
+    {% if assigned_tasks %}
+        <h2>Assigned Tasks</h2>
+        <table border="1" cellspacing="0" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Task Title</th>
+                    <th>Task Description</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in assigned_tasks %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.start_date }}</td>
+                        <td>{{ task.end_date }}</td>
+                        <td>
+                            <select name="status_{{ task.id }}">
+                                <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit">Update Status</button>
+    {% endif %}
+</form>
