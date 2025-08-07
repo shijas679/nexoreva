@@ -15,16 +15,17 @@ def task_status(request):
             try:
                 staff_obj = Staff.objects.get(staff_code=staff_code)
                 assigned_tasks = staff_obj.assignments.all()
-                print(assigned_tasks)
-                # Print selected dropdown values
-                for task in assigned_tasks:
-                    selected_status = request.POST.get(f'status_{task.id}')
-                    print(f"Task ID: {task.id}, Selected Status: {selected_status}")
 
-                    # Optional: Update in DB
-                    if selected_status and selected_status != task.status:
-                        task.status = selected_status
-                        task.save()
+                if 'update' in request.POST:
+                    # Loop through tasks and update their statuses
+                    for task in assigned_tasks:
+                        selected_status = request.POST.get(f'status_{task.id}')
+                        if selected_status and selected_status != task.status:
+                            task.status = selected_status
+                            task.save()
+                # If 'fetch' is clicked, just fetch and display the tasks — no update
+                elif 'fetch' in request.POST:
+                    pass  # Tasks are already fetched above
 
             except Staff.DoesNotExist:
                 error_message = "No staff found with this code."
