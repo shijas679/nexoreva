@@ -95,3 +95,9 @@ def view_staff(request):
         'selected_role': role_filter,
         'search_query': query  # Send cleaned query string
     })
+
+from django.shortcuts import render
+
+def search_staff_by_code(request):
+    # Temporary implementation to fix import error
+    return render(request, 'staff/search.html')

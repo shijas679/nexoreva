@@ -29,12 +29,18 @@ INSTALLED_APPS = [
 
     # Third-party
     'crispy_forms',
+    'certificate',
     'workassignment',
     'task_trakking'
     
 
 
 ]
+
+    
+
+
+
 
 # Crispy Forms Settings
 CRISPY_TEMPLATE_PACK = 'bootstrap4'  # or 'bootstrap5' if you're using Bootstrap 5
