@@ -22,7 +22,7 @@
         <a href="{% url 'attendance_home' %}" class="nav-link {% if active_page == 'attendance' %}active{% endif %}" data-nav="attendance">Attendance</a>
       </li>
       <li>
-        <a href="#" class="nav-link {% if active_page == 'task' %}active{% endif %}" data-nav="task">Task</a>
+        <a href="{% url 'task-status' %}" class="nav-link {% if active_page == 'task' %}active{% endif %}" data-nav="task">Task</a>
       </li>
       <span class="slider-bg"></span>
     </ul>

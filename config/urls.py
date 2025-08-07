@@ -23,6 +23,7 @@ urlpatterns = [
     path('dashboard/', include('dashboard.urls')),  # << dashboard now at /dashboard/
     path('staff/', include('staff.urls')),
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
+    path('',include('task_trakking.urls'))
 ]
 
 if settings.DEBUG:
