@@ -1,20 +1,52 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/attendance.css' %}">
 {% endblock %}
+
 {% block content %}
-<h2>Leave Request</h2>
-<form method="post">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Submit Leave Request</button>
-</form>
-<a href="{% url 'attendance_home' %}">Back to Attendance</a>
-{% if messages %}
-<ul>
-  {% for msg in messages %}
-  <li>{{ msg }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endblock %}
+<div class="container">
+  <h2>Leave Request</h2>
+
+  <div class="form-container">
+    
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="input-group{% if field.errors %} has-error{% endif %}">
+        {# For checkboxes/radios, label goes after input, for others label goes after input for floating label #}
+        {% if field.widget_type == 'checkbox' or field.widget_type == 'radioselect' %}
+            <div class="check-row">
+                {{ field }}
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            </div>
+        {% else %}
+            {{ field }}
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {% endif %}
+        {% if field.errors %}
+          <div class="error-message">
+            {{ field.errors|striptags }}
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="login-btn full-width-btn">Submit Leave Request</button>
+  </form>
+  <a href="{% url 'attendance_home' %}" class="leave-btn back-button">Back to Attendance</a>
+</div>
+
+
+ 
+
+  {% if messages %}
+  <ul class="messages">
+    {% for msg in messages %}
+    <li class="message {{ msg.tags }}">{{ msg }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}
