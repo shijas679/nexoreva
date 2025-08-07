@@ -1,50 +1,120 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/view_staff.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-3">
+  <!-- Page Header -->
+  <div class="page-header">
+    <i class="fas fa-users fa-2x" style="color: var(--primary-color);"></i>
     <h2>📋 All Staff Members</h2>
-    <!-- ➕ Onboarding Button -->
-    <a href="{% url 'add_staff' %}" class="btn btn-success">
-      ➕ Add New Onboarding
-    </a>
   </div>
 
-  <table class="table table-bordered table-striped mt-3">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Unicode</th>
-        <th>Full Name</th>
-        <th>Role</th>
-        <th>Department</th>
-        <th>Email</th>
-        <th>Join Date</th>
-        <th>Onboarding Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for staff in staff_list %}
-      <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ staff.staff_code }}</td>
-        <td>{{ staff.full_name }}</td>
-        <td>{{ staff.role }}</td>
-        <td>{{ staff.department }}</td>
-        <td>{{ staff.email }}</td>
-        <td>{{ staff.join_date }}</td>
-        <td>{{ staff.status }}</td>
-        <td>
-          <a href="{% url 'edit_staff' staff.id %}" class="btn btn-sm btn-primary">Edit</a>
-          <a href="{% url 'delete_staff' staff.id %}" class="btn btn-sm btn-danger">Delete</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="9">No staff found.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <!-- 🔍 Horizontal Search + Filter Row -->
+  <form method="get" class="filter-bar">
+    <!-- Search Input -->
+    <div class="filter-item">
+      <input type="text" name="search" class="form-control" placeholder="🔍 Search by Name, Email or Unicode" value="{{ search_query }}">
+    </div>
+    <!-- Role Dropdown -->
+    <div class="filter-item">
+      <select name="sort" class="form-select">
+        <option value="">🧍 Filter by Role</option>
+        <option value="All" {% if selected_role == "All" %}selected{% endif %}>All</option>
+        <option value="Employee" {% if selected_role == "Employee" %}selected{% endif %}>Employee</option>
+        <option value="Intern" {% if selected_role == "Intern" %}selected{% endif %}>Intern</option>
+      </select>
+    </div>
+    <!-- Apply Button -->
+    <div class="filter-item btn-item">
+      <button type="submit" class="btn btn-primary-modern btn-modern w-70">
+        <i class="fas fa-check"></i> Apply
+      </button>
+    </div>
+
+    <!-- Reset Button -->
+    <div class="filter-item btn-item">
+      <a href="{% url 'view_staff' %}" class="btn btn-secondary-modern btn-modern w-100">
+        <i class="fas fa-undo"></i> Reset
+      </a>
+    </div>
+
+
+
+    <!-- Add New Button -->
+    <div class="filter-item add-btn-item ms-auto">
+      <a href="{% url 'add_staff' %}" class="btn btn-success-modern btn-modern w-100">
+        <i class="fas fa-plus"></i> Add New Onboarding
+      </a>
+    </div>
+  </form>
+
+  <!-- 📊 Staff Table -->
+  <div class="table-container">
+    <table class="table table-striped mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Unicode</th>
+          <th>Full Name</th>
+          <th>Role</th>
+          <th>Department</th>
+          <th>Email</th>
+          <th>Join Date</th>
+          <th>Onboarding Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for staff in staff_list %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td><strong>{{ staff.staff_code }}</strong></td>
+          <td>{{ staff.full_name }}</td>
+          <td>
+            {% if staff.role == "Employee" %}
+              <span class="badge bg-primary">{{ staff.role }}</span>
+            {% else %}
+              <span class="badge bg-info">{{ staff.role }}</span>
+            {% endif %}
+          </td>
+          <td>{{ staff.department }}</td>
+          <td>{{ staff.email }}</td>
+          <td>{{ staff.join_date }}</td>
+          <td>
+            {% if staff.status == "Completed" %}
+              <span class="status-badge status-completed">{{ staff.status }}</span>
+            {% elif staff.status == "Ongoing" %}
+              <span class="status-badge status-ongoing">{{ staff.status }}</span>
+            {% else %}
+              <span class="status-badge status-pending">{{ staff.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            <div class="action-buttons">
+              <a href="{% url 'edit_staff' staff.id %}" class="btn btn-sm-modern btn-edit">
+                <i class="fas fa-edit"></i> Edit
+              </a>
+              <a href="{% url 'delete_staff' staff.id %}" class="btn btn-sm-modern btn-delete">
+                <i class="fas fa-trash"></i> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="empty-state text-center py-4">
+            <i class="fas fa-users fa-3x mb-3" style="color: #cbd5e1;"></i>
+            <p class="mt-2">No staff members found.</p>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}

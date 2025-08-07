@@ -9,7 +9,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     # Core dashboard (home/landing)
-    path('', include('dashboard.urls')),
+    # path('', include('dashboard.urls')),
 
     # Staff management
     path('staff/', include('staff.urls')),
