@@ -16,10 +16,10 @@
       <tr>
         <th>#</th>
         <th>Course Name</th>
-        <th>Sub Course</th>
+        <th>Sub Column</th>
         <th>Start Date</th>
         <th>End Date</th>
-        <th>Payment</th>
+        <th>Fees</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -28,15 +28,15 @@
       <tr>
         <td>{{ forloop.counter }}</td>
         <td>{{ course.name }}</td>
-        <td>{{ course.sub_course }}</td>
+        <td>{{ course.sub_column }}</td>
         <td>{{ course.start_date }}</td>
         <td>{{ course.end_date }}</td>
-        <td>{{ course.payment_amount }}</td>
+        <td>{{ course.fees }}</td>
         <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a></td>
       </tr>
       {% empty %}
       <tr>
-        <td colspan="5">No courses available.</td>
+        <td colspan="7">No courses available.</td>
       </tr>
       {% endfor %}
     </tbody>

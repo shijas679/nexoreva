@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'course_css/add-course.css' %}">
 {% endblock %}
@@ -8,7 +9,7 @@
 {% block content %}
 <div class="container">
   <h2 class="mb-4">📚 Add New Course</h2>
-  
+
   <form method="POST">
     {% csrf_token %}
     <fieldset>
@@ -18,9 +19,10 @@
         <label for="{{ form.name.id_for_label }}">Course Name:</label>
         {{ form.name }}
       </div>
+
       <div class="mb-2">
-        <label for="{{ form.sub_course.id_for_label }}">Sub Course:</label>
-        {{ form.sub_course }}
+        <label for="{{ form.sub_column.id_for_label }}">Sub Column:</label>
+        {{ form.sub_column }}
       </div>
 
       <div class="mb-2">
@@ -37,39 +39,46 @@
         <label for="{{ form.end_date.id_for_label }}">End Date:</label>
         {{ form.end_date }}
       </div>
+
       <div class="mb-2">
-        <label for="{{ form.payment_amount.id_for_label }}">Payment Amount (₹):</label>
-        {{ form.payment_amount }}
+        <label for="{{ form.fees.id_for_label }}">Fees (₹):</label>
+        {{ form.fees }}
       </div>
     </fieldset>
 
-    <button type="submit" class="btn-success">Create Course</button>
+    <button type="submit" class="btn btn-success mt-3">Create Course</button>
   </form>
 </div>
-
 {% endblock %}
+
+{% block extra_js %}
 <script>
-const subCourseOptions = {
+const subColumnOptions = {
   'IT': ['Web Development', 'Data Science', 'Networking'],
   'Engineering': ['Mechanical', 'Civil', 'Electrical'],
   'Medical': ['MBBS', 'Nursing', 'Pharmacy']
 };
-const courseSelect = document.getElementById('id_course_name');
-const subCourseSelect = document.getElementById('id_sub_course');
-function updateSubCourses() {
-  const selected = courseSelect.value;
-  subCourseSelect.innerHTML = '<option value="">---------</option>';
-  if (subCourseOptions[selected]) {
-    subCourseOptions[selected].forEach(opt => {
-      const option = document.createElement('option');
-      option.value = opt;
-      option.text = opt;
-      subCourseSelect.appendChild(option);
-    });
-  }
+
+const courseSelect = document.getElementById('id_name');
+const subColumnSelect = document.getElementById('id_sub_column');
+
+function updateSubColumns() {
+  const selectedCourse = courseSelect.value;
+  const options = subColumnOptions[selectedCourse] || [];
+  
+  subColumnSelect.innerHTML = '<option value="">---------</option>';
+
+  options.forEach(sub => {
+    const option = document.createElement('option');
+    option.value = sub;
+    option.textContent = sub;
+    subColumnSelect.appendChild(option);
+  });
 }
-if (courseSelect) {
-  courseSelect.addEventListener('change', updateSubCourses);
-  window.addEventListener('DOMContentLoaded', updateSubCourses);
+
+if (courseSelect && subColumnSelect) {
+  courseSelect.addEventListener('change', updateSubColumns);
+  window.addEventListener('DOMContentLoaded', updateSubColumns);
 }
 </script>
+{% endblock %}

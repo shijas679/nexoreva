@@ -17,8 +17,8 @@
         {{ form.name }}
       </div>
       <div class="mb-2">
-        <label for="{{ form.sub_course.id_for_label }}">Sub Course:</label>
-        {{ form.sub_course }}
+        <label for="{{ form.sub_column.id_for_label }}">Sub Column:</label>
+        {{ form.sub_column }}
       </div>
       <div class="mb-2">
         <label for="{{ form.description.id_for_label }}">Description:</label>
@@ -33,38 +33,47 @@
         {{ form.end_date }}
       </div>
       <div class="mb-2">
-        <label for="{{ form.payment_amount.id_for_label }}">Payment Amount (₹):</label>
-        {{ form.payment_amount }}
+        <label for="{{ form.fees.id_for_label }}">Fees (₹):</label>
+        {{ form.fees }}
       </div>
     </fieldset>
     <button type="submit" class="btn-success">Update Course</button>
   </form>
 </div>
 {% endblock %}
+
+{% block extra_js %}
 <script>
-const subCourseOptions = {
+const subColumnOptions = {
   'IT': ['Web Development', 'Data Science', 'Networking'],
   'Engineering': ['Mechanical', 'Civil', 'Electrical'],
   'Medical': ['MBBS', 'Nursing', 'Pharmacy']
 };
-const courseSelect = document.getElementById('id_course_name');
-const subCourseSelect = document.getElementById('id_sub_course');
-function updateSubCourses() {
-  const selected = courseSelect.value;
-  const current = "{{ form.sub_course.value|escapejs }}";
-  subCourseSelect.innerHTML = '<option value="">---------</option>';
-  if (subCourseOptions[selected]) {
-    subCourseOptions[selected].forEach(opt => {
-      const option = document.createElement('option');
-      option.value = opt;
-      option.text = opt;
-      if (opt === current) option.selected = true;
-      subCourseSelect.appendChild(option);
-    });
-  }
+
+const courseSelect = document.getElementById('id_name');
+const subColumnSelect = document.getElementById('id_sub_column');
+
+function updateSubColumns() {
+  const selectedCourse = courseSelect.value;
+  const currentValue = "{{ form.sub_column.value|escapejs }}";
+  const options = subColumnOptions[selectedCourse] || [];
+  
+  subColumnSelect.innerHTML = '<option value="">---------</option>';
+
+  options.forEach(sub => {
+    const option = document.createElement('option');
+    option.value = sub;
+    option.textContent = sub;
+    if (sub === currentValue) {
+      option.selected = true;
+    }
+    subColumnSelect.appendChild(option);
+  });
 }
-if (courseSelect) {
-  courseSelect.addEventListener('change', updateSubCourses);
-  window.addEventListener('DOMContentLoaded', updateSubCourses);
+
+if (courseSelect && subColumnSelect) {
+  courseSelect.addEventListener('change', updateSubColumns);
+  window.addEventListener('DOMContentLoaded', updateSubColumns);
 }
 </script>
+{% endblock %}

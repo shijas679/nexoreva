@@ -4,16 +4,17 @@ from .models import Course
 class CourseForm(forms.ModelForm):
     class Meta:
         model = Course
-        fields = ['name', 'sub_course', 'description', 'start_date', 'end_date', 'payment_amount']
+        fields = ['name', 'sub_column', 'description', 'start_date', 'end_date', 'fees']
         widgets = {
-            'name': forms.Select(attrs={'class': 'form-control', 'id': 'id_course_name'}),
-            'sub_course': forms.Select(attrs={'class': 'form-control', 'id': 'id_sub_course'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Enter course description'}),
+            'name': forms.Select(attrs={'class': 'form-control', 'id': 'id_name'}),
+            'sub_column': forms.Select(attrs={'class': 'form-control', 'id': 'id_sub_column'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
             'start_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'end_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'payment_amount': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter payment amount'}),
+            'fees': forms.NumberInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['sub_course'].choices = [('', '---------')]
+        # Empty by default; JS will populate based on course selection
+        self.fields['sub_column'].choices = [('', '---------')]
