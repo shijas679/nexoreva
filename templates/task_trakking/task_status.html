@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/task_status.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Staff Code Section -->
+        <div class="input-group">
+            <input type="text" placeholder="Enter staff_code" name="staff_code" value="{{ request.POST.staff_code }}" required>
+            <button type="submit" name="fetch">Fetch Tasks</button>
+        </div>
+
+        {% if assigned_tasks %}
+        <!-- Task Table Section -->
+        <div class="task-section">
+            <h2>Assigned Tasks</h2>
+            <table>
+                <caption>List of tasks assigned to the staff member</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Task Title</th>
+                        <th scope="col">Task Description</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in assigned_tasks %}
+                    <tr>
+                        <td>{{ task.task_title }}</td>
+                        <td>{{ task.description }}</td>
+                        <td>{{ task.start_date }}</td>
+                        <td>{{ task.end_date }}</td>
+                        <td>
+                            <label for="status_{{ task.id }}" class="visually-hidden">Status for {{ task.task_title }}</label>
+                            <select name="status_{{ task.id }}" id="status_{{ task.id }}">
+                                <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="button-group">
+                <button type="submit" name="update">Update Status</button>
+            </div>
+        </div>
+        {% endif %}
+    </form>
+</div>
+{% endblock %}

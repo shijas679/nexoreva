@@ -8,6 +8,10 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+
+ 
+    
+
 <div class="container">
   <div class="dashboard-content">
     <h2 class="dashboard-title">Admin Dashboard</h2>
@@ -18,6 +22,7 @@
         <div class="stat-number">{{ total_staff }}</div>
         <div class="stat-label">Total Staff</div>
       </div>
+      
       
       <div class="stat-card">
         <div class="stat-number">{{ total_departments }}</div>
@@ -50,6 +55,11 @@
       <a href="{% url 'attendence_details' %}" class="action-btn">
         <i class="bi bi-clipboard-check"></i>
         <span>Attendance Report</span>
+      </a>
+
+        <a href="{% url 'generate_certificate' %}" class="action-btn">
+        <i class="bi bi-journal-bookmark-fill"></i>
+        <span>Certificates</span>
       </a>
     </div>
   </div>

@@ -7,6 +7,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('', include('dashboard.urls')),
+    path('staff/', include('staff.urls')), 
+    path('certificate/', include('certificate.urls')),
 
     # Core dashboard (home/landing)
     # path('', include('dashboard.urls')),
@@ -22,6 +25,7 @@ urlpatterns = [
     path('',include('attendance.urls')),
 
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
+    path('',include('task_trakking.urls'))
 ]
 
 if settings.DEBUG:
