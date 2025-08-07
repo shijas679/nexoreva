@@ -15,12 +15,15 @@ urlpatterns = [
     # path('', include('dashboard.urls')),
 
     # Staff management
-    path('staff/', include('staff.urls')),
+    # path('staff/', include('staff.urls')),
 
     # Course management
     path('courses/', include('course.urls')),  # ✅ Added properly
     path('', include('attendance.urls')),      # << Make attendance home the default page
     path('dashboard/', include('dashboard.urls')),  # << dashboard now at /dashboard/
+    path('staff/', include('staff.urls')),
+    path('',include('attendance.urls')),
+
     # path('staff/', include('staff.urls')),
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
     path('',include('task_trakking.urls'))
