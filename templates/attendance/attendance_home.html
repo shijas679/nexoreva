@@ -4,41 +4,70 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/attendance.css' %}">
 {% endblock %}
+{% block extra_js %}
+<script src="{% static 'js/attendance.js' %}" defer></script>
+{% endblock %}
 {% block content %}
-<h2>Attendance</h2>
+<!-- Header/Navbar -->
+<header class="header">
+  <nav class="navbar">
+    <!-- Logo -->
+    <div class="logo-container">
+      <img src="{% static 'images/logo.png' %}" alt="Nexoréva Logo" class="logo">
+    </div>
+    
+    <!-- Navigation Links with Sliding Pill -->
+    <ul class="nav-links" id="navLinks" data-active="{% if active_page == 'attendance' %}attendance{% elif active_page == 'task' %}task{% endif %}">
+      <li>
+        <a href="{% url 'attendance_home' %}" class="nav-link {% if active_page == 'attendance' %}active{% endif %}" data-nav="attendance">Attendance</a>
+      </li>
+      <li>
+        <a href="#" class="nav-link {% if active_page == 'task' %}active{% endif %}" data-nav="task">Task</a>
+      </li>
+      <span class="slider-bg"></span>
+    </ul>
+    
+    <!-- Login Button -->
+    <a href="{% url 'login' %}" class="login-btn">Login</a>
+  </nav>
+</header>
 
-<!-- Combined Time In/Out Form -->
-<form method="post" action="{% url 'attendance_action' %}">
-  {% csrf_token %}
-  <input
-    type="text"
-    name="staff_code"
-    placeholder="Enter your staff code"
-    required
-  />
-  <select name="action" required>
-    <option value="" disabled selected>Select Action</option>
-    <option value="time_in">Time In</option>
-    <option value="time_out">Time Out</option>
-  </select>
-  <button type="submit">Submit</button>
-</form>
-<br />
+<!-- Main Content -->
+<div class="container">
+  <h2>Attendance Management</h2>
 
-<!-- Leave, Task, Login Buttons -->
-<a href="{% url 'leave_request' %}"
-  ><button type="button">Request Leave</button></a
->
+  <!-- Premium Form Container -->
+  <div class="form-container">
+    <!-- Combined Time In/Out Form -->
+    <form method="post" action="{% url 'attendance_action' %}">
+      {% csrf_token %}
+      <input
+        type="text"
+        name="staff_code"
+        placeholder="Enter your staff code"
+        required
+      />
+      <select name="action" required>
+        <option value="" disabled selected>Select Action</option>
+        <option value="time_in">Time In</option>
+        <option value="time_out">Time Out</option>
+      </select>
+      <button type="submit">Submit Attendance</button>
+    </form>
 
-<a href="{% url 'login' %}"><button type="button">Login</button></a>
+    <!-- Request Leave Button inside form container -->
+    <a href="{% url 'leave_request' %}" class="leave-btn">
+      Request Leave
+    </a>
+  </div>
 
-{% if messages %}
-<ul>
-  {% for msg in messages %}
-  <li>{{ msg }}</li>
-  {% endfor %}
-</ul>
-{% endif %} {% endblock %}
-
-
-
+  <!-- Messages -->
+  {% if messages %}
+  <ul>
+    {% for msg in messages %}
+    <li>{{ msg }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</div>
+{% endblock %}
