@@ -5,13 +5,13 @@ from .models import WorkAssignment
 from .forms import WorkAssignmentForm
 
 
-# 🔹 1. Home View – List All Active Interns and Employees
+# Home View – List All Active Interns and Employees
 def home(request):
     users = Staff.objects.filter(role__in=['Intern', 'Employee'], status='Active')
     return render(request, 'workassignment/user_list.html', {'users': users})
 
 
-# 🔹 2. User Detail – View Individual Staff & Their Assignments
+# User Detail – View Individual Staff & Their Assignments
 def user_detail(request, user_id):
     user = get_object_or_404(Staff, id=user_id)
     assignments = WorkAssignment.objects.filter(assigned_to=user)
@@ -21,7 +21,7 @@ def user_detail(request, user_id):
     })
 
 
-# 🔹 3. Add Assignment for Specific User
+#  Add Assignment for Specific User
 def add_assignment(request, user_id):
     user = get_object_or_404(Staff, id=user_id)
     if request.method == 'POST':
@@ -39,7 +39,7 @@ def add_assignment(request, user_id):
     })
 
 
-# 🔹 4. Admin View: List of Users with Assigned Work
+# Admin View: List of Users with Assigned Work
 @login_required
 def viewwork_assignment_userlist_staff(request):
     users = Staff.objects.filter(role__in=['Intern', 'Employee'], status='Active')
@@ -60,7 +60,7 @@ def viewwork_assignment_userlist_staff(request):
         'user_data': user_data
     })
 
-# 🔹 5. Add Assignment via Staff Code (Search + Assign Form)
+# Add Assignment via Staff Code (Search + Assign Form)
 @login_required
 def add_assignment_view(request, user_id):
     staff = None
@@ -99,11 +99,12 @@ def add_assignment_view(request, user_id):
         'staff': staff,
         'staff_code': staff_code,
     })
-# views.py
 
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import WorkAssignment
 from .forms import WorkAssignmentForm
+
+# Edit Assignment
 
 def edit_assignment(request, assignment_id):
     assignment = get_object_or_404(WorkAssignment, id=assignment_id)
@@ -121,7 +122,7 @@ def delete_assignment(request, assignment_id):
     assignment.delete()
     return redirect('viewwork_assignment_userlist_staff')
 
-# 🔹 Delete Assignment
+#  Delete Assignment
 @login_required
 def delete_assignment(request, assignment_id):
     assignment = get_object_or_404(WorkAssignment, id=assignment_id)

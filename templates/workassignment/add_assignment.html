@@ -7,9 +7,9 @@
 
 
 <div class="container mt-4">
-    <h3>🧑‍💼 Add Work Assignment</h3>
+    <h3> Add Work Assignment</h3>
 
-    <!-- 🔍 Staff Code Search Form -->
+    <!--  Staff Code Search Form -->
     <form method="post" action="" class="form-inline mb-4">
         {% csrf_token %}
         <input type="text" name="staff_code" placeholder="Enter Staff Code" class="form-control mr-2" value="{{ staff_code }}" required>
@@ -17,28 +17,27 @@
     </form>
 
     {% if staff %}
-        <!-- ✅ Display Searched Staff Details -->
+        <!-- Display Searched Staff Details -->
         <div class="card mb-3">
             <div class="card-body">
                 <p><strong>Name:</strong> {{ staff.full_name}}</p>
-
                 <p><strong>Email:</strong> {{ staff.email }}</p>
                 <p><strong>Department:</strong> {{ staff.department }}</p>
             </div>
         </div>
 
-        <!-- ✅ Assignment Form -->
-        <h5>📝 Assign Task to {{ staff.full_name }}</h5>
+        <!--  Assignment Form -->
+        <h5> Assign Task to {{ staff.full_name }}</h5>
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="hidden" name="assigned_to" value="{{ staff.id }}">
-            <button type="submit" class="btn btn-success">➕ Submit Assignment</button>
+            <button type="submit" class="btn btn-success"> Submit Assignment</button>
         </form>
     {% elif staff_code %}
         <div class="alert alert-danger">
-            ⚠️ No staff found with code "<strong>{{ staff_code }}</strong>".
+             No staff found with code "<strong>{{ staff_code }}</strong>".
         </div>
     {% endif %}
 </div>
