@@ -78,54 +78,87 @@ def leave_request(request):
 
     return render(request, 'attendance/leave_request.html', {'form': form})
 
+from datetime import date, timedelta, datetime
+from django.db.models import Q
+from django.shortcuts import render
+# from .models import Staff, Attendance, LeaveRequest
+
 def attendance_details(request):
     today = date.today()
     search_query = request.GET.get('q', '').strip()
     status_filter = request.GET.get('status', '')
 
+    # Get from_date and to_date from GET, fallback to today
+    from_date_str = request.GET.get('from_date')
+    to_date_str = request.GET.get('to_date')
+
+    # Parse dates, safe fallback if empty or invalid
+    def parse_date(val, fallback):
+        try:
+            return datetime.strptime(val, "%Y-%m-%d").date()
+        except (TypeError, ValueError):
+            return fallback
+
+    from_date = parse_date(from_date_str, today)
+    to_date = parse_date(to_date_str, today)
+
+    # Ensure from_date is not after to_date
+    if from_date > to_date:
+        from_date, to_date = to_date, from_date
+
     all_staff = Staff.objects.all()
     if search_query:
         all_staff = all_staff.filter(Q(full_name__icontains=search_query))
 
+    # For each staff, get attendance data for each date in range
     attendance_details = []
+    delta_days = (to_date - from_date).days + 1
+
     for staff in all_staff:
-        attendance = Attendance.objects.filter(staff=staff, date=today).first()
-        on_leave = LeaveRequest.objects.filter(
-            staff=staff, from_date__lte=today, to_date__gte=today
-        ).exists()
+        for offset in range(delta_days):
+            current_date = from_date + timedelta(days=offset)
 
-        if attendance:
-            status = "Present"
-            time_in = attendance.time_in
-            time_out = attendance.time_out
-        elif on_leave:
-            status = "On Leave"
-            time_in = time_out = None
-        else:
-            status = "Absent"
-            time_in = time_out = None
+            attendance = Attendance.objects.filter(staff=staff, date=current_date).first()
+            on_leave = LeaveRequest.objects.filter(
+                staff=staff, from_date__lte=current_date, to_date__gte=current_date
+            ).exists()
 
-        # Move the dash-class construction here
-        status_class = status.lower().replace(' ', '-')
+            if attendance:
+                status = "Present"
+                time_in = attendance.time_in
+                time_out = attendance.time_out
+            elif on_leave:
+                status = "On Leave"
+                time_in = time_out = None
+            else:
+                status = "Absent"
+                time_in = time_out = None
 
-        # Filter by status, if selected
-        if status_filter and status != status_filter:
-            continue
+            status_class = status.lower().replace(' ', '-')
 
-        attendance_details.append({
-            'staff': staff,
-            'date': today,
-            'time_in': time_in,
-            'time_out': time_out,
-            'status': status,
-            'status_class': status_class,  # pass preprocessed class
-        })
+            if status_filter and status != status_filter:
+                continue
+
+            attendance_details.append({
+                'staff': staff,
+                'date': current_date,
+                'time_in': time_in,
+                'time_out': time_out,
+                'status': status,
+                'status_class': status_class,
+            })
+
+    # Sort by date DESC, then staff name
+    attendance_details.sort(key=lambda d: (d['date'], d['staff'].full_name))
 
     return render(request, 'attendance/attendence_list.html', {
         'attendance_details': attendance_details,
         'search_query': search_query,
         'status_filter': status_filter,
+        'from_date': from_date.strftime("%Y-%m-%d"),
+        'to_date': to_date.strftime("%Y-%m-%d"),
     })
+    
 
 def leave_details(request, staff_id):
     staff = get_object_or_404(Staff, id=staff_id)
@@ -134,21 +167,19 @@ def leave_details(request, staff_id):
     from_date = request.GET.get('from_date')
     to_date = request.GET.get('to_date')
 
-    leave_requests = LeaveRequest.objects.filter(staff=staff)
+    # Always use records, since your template is iterating over 'records'
+    records = LeaveRequest.objects.filter(staff=staff).order_by('-request_date')
 
     if query:
-        leave_requests = leave_requests.filter(
-            Q(reason__icontains=query)
-        )
-
+        records = records.filter(Q(reason__icontains=query))
     if from_date:
-        leave_requests = leave_requests.filter(from_date__gte=from_date)
+        records = records.filter(from_date__gte=from_date)
     if to_date:
-        leave_requests = leave_requests.filter(to_date__lte=to_date)
+        records = records.filter(to_date__lte=to_date)
 
     context = {
         'staff': staff,
-        'leave_requests': leave_requests,
+        'records': records,           # CHANGED: 'records' as your template expects
         'query': query,
         'from_date': from_date,
         'to_date': to_date,

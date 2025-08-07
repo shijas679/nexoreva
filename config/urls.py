@@ -15,7 +15,7 @@ urlpatterns = [
     # path('', include('dashboard.urls')),
 
     # Staff management
-    path('staff/', include('staff.urls')),
+    # path('staff/', include('staff.urls')),
 
     # Course management
     path('courses/', include('course.urls')),  # ✅ Added properly

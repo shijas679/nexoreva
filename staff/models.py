@@ -1,19 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 import random
-from django.urls import reverse
-from django.core.exceptions import ValidationError
 
 def generate_unique_code(role_prefix):
     number = ''.join(random.choices('0123456789', k=4))
     return f"{role_prefix}{number}"
 
 class Staff(models.Model):
-    """
-    Staff Model to hold employee/intern records.
-    Includes personal, professional, and document-related details.
-    """
-
     ROLE_CHOICES = [
         ('Employee', 'Employee'),
         ('Intern', 'Intern'),
@@ -43,6 +36,7 @@ class Staff(models.Model):
     GENDER_CHOICES = [
         ('Male', 'Male'),
         ('Female', 'Female'),
+        
     ]
 
     full_name = models.CharField(max_length=100)
@@ -71,11 +65,7 @@ class Staff(models.Model):
 
     staff_code = models.CharField(max_length=20, unique=True, blank=True, null=True)
 
-    created_at = models.DateTimeField(auto_now_add=True)  # New: Timestamp when record is created
-    updated_at = models.DateTimeField(auto_now=True)      # New: Timestamp when record is updated
-
     def save(self, *args, **kwargs):
-        # Generate unique staff code if not already set
         if not self.staff_code:
             prefix = 'nxrint' if self.role == 'Intern' else 'nxremp'
             while True:
@@ -83,20 +73,7 @@ class Staff(models.Model):
                 if not Staff.objects.filter(staff_code=new_code).exists():
                     self.staff_code = new_code
                     break
-
-        # Optional: Run full validation before saving
-        self.full_clean()
-
         super().save(*args, **kwargs)
-
-    def get_absolute_url(self):
-        # Optional: Used for redirects after saving
-        return reverse('staff_detail', kwargs={'pk': self.pk})
 
     def __str__(self):
         return self.full_name
-
-    class Meta:
-        ordering = ['full_name']
-        verbose_name = 'Staff Member'
-        verbose_name_plural = 'Staff Members'
