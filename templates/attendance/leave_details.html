@@ -1,0 +1,32 @@
+<h2>Leave Details</h2>
+
+<form method="get">
+    <input type="text" name="q" placeholder="Search by name, code, or reason" value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Unique Code</th>
+            <th>From Date</th>
+            <th>To Date</th>
+            <th>Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for leave in leave_requests %}
+        <tr>
+            <td>{{ leave.staff.full_name }}</td>
+            <td>{{ leave.staff.staff_code }}</td>
+            <td>{{ leave.from_date }}</td>
+            <td>{{ leave.to_date }}</td>
+            <td>{{ leave.reason }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5">No leave requests found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+

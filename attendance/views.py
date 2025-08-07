@@ -1,30 +1,39 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.utils.timezone import localtime  # ✅ Added for local time conversion
 from django.contrib import messages
 from .models import Attendance, LeaveRequest
 from staff.models import Staff
 from .forms import StaffCodeForm, LeaveRequestForm
 from django.contrib.auth.decorators import login_required
+from .models import Attendance
+from datetime import date
 
 
 def attendance_home(request):
     return render(request, 'attendance/attendance_home.html')
+
 
 def attendance_action(request):
     if request.method == 'POST':
         staff_code = request.POST.get('staff_code')
         action = request.POST.get('action')  # 'time_in' or 'time_out'
         staff = Staff.objects.filter(staff_code=staff_code).first()
+
         if not staff:
             messages.error(request, "Invalid staff code.")
             return redirect('attendance_home')
-        today = timezone.now().date()
+
+        today = timezone.localdate()  # ✅ Uses local date
         att, _ = Attendance.objects.get_or_create(staff=staff, date=today)
+
+        now = localtime(timezone.now()).time()  # ✅ Local time in IST
+
         if action == 'time_in':
             if att.time_in:
                 messages.info(request, f"{staff.full_name} already timed in today.")
             else:
-                att.time_in = timezone.now().time()
+                att.time_in = now
                 att.save()
                 messages.success(request, f"{staff.full_name} timed in successfully!")
         elif action == 'time_out':
@@ -33,22 +42,25 @@ def attendance_action(request):
             elif att.time_out:
                 messages.info(request, f"{staff.full_name} already timed out today.")
             else:
-                att.time_out = timezone.now().time()
+                att.time_out = now
                 att.save()
                 messages.success(request, f"{staff.full_name} timed out successfully!")
         else:
             messages.error(request, "Please select Time In or Time Out.")
+
         return redirect('attendance_home')
     else:
         return redirect('attendance_home')
 
 
 def leave_request(request):
+    form = LeaveRequestForm(request.POST or None)
+
     if request.method == 'POST':
-        form = LeaveRequestForm(request.POST)
         if form.is_valid():
             staff_code = form.cleaned_data['staff_code']
             staff = Staff.objects.filter(staff_code=staff_code).first()
+
             if staff:
                 LeaveRequest.objects.create(
                     staff=staff,
@@ -56,10 +68,76 @@ def leave_request(request):
                     to_date=form.cleaned_data['to_date'],
                     reason=form.cleaned_data['reason']
                 )
-                messages.success(request, f"Leave request submitted for {staff.full_name}.")
+                messages.success(request, f"Leave request submitted successfully for {staff.full_name}.")
                 return redirect('attendance_home')
             else:
-                messages.error(request, "Invalid staff code.")
-    else:
-        form = LeaveRequestForm()
+                messages.error(request, "Invalid Staff Code. Please try again.")
+        else:
+            messages.error(request, "There was an error in the form. Please check the details.")
+
     return render(request, 'attendance/leave_request.html', {'form': form})
+
+def attendance_details(request):  # ✅ function name updated
+    today = date.today()
+    all_staff = Staff.objects.all()
+    attendance_details = []  # ✅ variable name updated
+
+    for staff in all_staff:
+        attendance = Attendance.objects.filter(staff=staff, date=today).first()
+        on_leave = LeaveRequest.objects.filter(
+            staff=staff,
+            from_date__lte=today,
+            to_date__gte=today
+        ).exists()
+
+        if attendance:
+            status = "Present"
+            time_in = attendance.time_in
+            time_out = attendance.time_out
+        elif on_leave:
+            status = "On Leave"
+            time_in = time_out = None
+        else:
+            status = "Absent"
+            time_in = time_out = None
+
+        attendance_details.append({
+            'staff': staff,
+            'date': today,
+            'time_in': time_in,
+            'time_out': time_out,
+            'status': status
+        })
+
+    return render(request, 'attendance/attendence_list.html', {
+        'attendance_details': attendance_details  # ✅ updated
+    })
+
+
+def leave_details(request, staff_id):
+    staff = get_object_or_404(Staff, id=staff_id)
+
+    query = request.GET.get('q', '')
+    from_date = request.GET.get('from_date')
+    to_date = request.GET.get('to_date')
+
+    leave_requests = LeaveRequest.objects.filter(staff=staff)
+
+    if query:
+        leave_requests = leave_requests.filter(
+            Q(reason__icontains=query)
+        )
+
+    if from_date:
+        leave_requests = leave_requests.filter(from_date__gte=from_date)
+    if to_date:
+        leave_requests = leave_requests.filter(to_date__lte=to_date)
+
+    context = {
+        'staff': staff,
+        'leave_requests': leave_requests,
+        'query': query,
+        'from_date': from_date,
+        'to_date': to_date,
+    }
+    return render(request, 'attendance/leave_details.html', context)

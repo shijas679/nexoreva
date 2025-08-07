@@ -1,0 +1,36 @@
+<table border="1">
+    <thead>
+        <tr>
+            <th>Staff Name</th>
+            <th>Date</th>
+            <th>Time In</th>
+            <th>Time Out</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for data in attendance_details %}  <!-- ✅ corrected -->
+        <tr>
+            <td>{{ data.staff.full_name }}</td>
+            <td>{{ data.date }}</td>
+            <td>{{ data.time_in|default:"--" }}</td>
+            <td>{{ data.time_out|default:"--" }}</td>
+            <td>
+                {% if data.status == "On Leave" %}
+                    <form method="get" action="{% url 'leave_details' data.staff.id %}">
+                        <button type="submit" style="background-color: #ffcccb; border: none; padding: 5px 10px; cursor: pointer;">
+                            On Leave
+                        </button>
+                    </form>
+                {% else %}
+                    {{ data.status }}
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No attendance data available.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
