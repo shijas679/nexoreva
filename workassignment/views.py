@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from staff.models import Staff
 from .models import WorkAssignment
 from .forms import WorkAssignmentForm
+from django.db.models import Exists, OuterRef
 
 
 # Home View – List All Active Interns and Employees
@@ -21,7 +22,7 @@ def user_detail(request, user_id):
     })
 
 
-#  Add Assignment for Specific User
+# Add Assignment for Specific User
 def add_assignment(request, user_id):
     user = get_object_or_404(Staff, id=user_id)
     if request.method == 'POST':
@@ -39,11 +40,17 @@ def add_assignment(request, user_id):
     })
 
 
-# Admin View: List of Users with Assigned Work
+# ✅ FIXED: View assignments only for staff who actually have them
 @login_required
 def viewwork_assignment_userlist_staff(request):
-    users = Staff.objects.filter(role__in=['Intern', 'Employee'], status='Active')
+    users = Staff.objects.annotate(
+        has_assignments=Exists(
+            WorkAssignment.objects.filter(assigned_to=OuterRef('pk'))
+        )
+    ).filter(has_assignments=True)
+
     user_data = []
+
     for user in users:
         assignments = WorkAssignment.objects.filter(assigned_to=user)
         for assign in assignments:
@@ -53,33 +60,47 @@ def viewwork_assignment_userlist_staff(request):
                 'username': user.full_name,
                 'role': user.role,
                 'assignment': assign.task_title,
-                'status': assign.status,  # You can update this if WorkAssignment has a real status field
+                'status': assign.status,
+                'task_code': assign.task_code,
                 'assignment_id': assign.id
             })
+
     return render(request, 'workassignment/assignment_userlist.html', {
         'user_data': user_data
     })
+
 
 # Add Assignment via Staff Code (Search + Assign Form)
 @login_required
 def add_assignment_view(request, user_id):
     staff = None
+    task = None
     staff_code = ''
+    task_code = ''
     form = WorkAssignmentForm()
 
     if request.method == 'POST':
         staff_code = request.POST.get('staff_code', '').strip()
+        task_code = request.POST.get('task_code', '').strip()
 
-        # Searching by Staff Code
+        # Staff Code Search
         if 'staff_code' in request.POST and 'assigned_to' not in request.POST:
             if staff_code:
                 try:
                     staff = Staff.objects.get(staff_code=staff_code)
                 except Staff.DoesNotExist:
                     staff = None
-            form = WorkAssignmentForm()
 
-        # Submitting assignment form
+        # Task Code Search
+        if 'task_code' in request.POST and 'assigned_to' not in request.POST:
+            if task_code:
+                try:
+                    task = WorkAssignment.objects.get(task_code=task_code)
+                    form = WorkAssignmentForm(instance=task)
+                except WorkAssignment.DoesNotExist:
+                    form = WorkAssignmentForm()
+
+        # Submitting New Assignment
         elif 'assigned_to' in request.POST:
             staff_id = request.POST.get('assigned_to')
             try:
@@ -92,20 +113,19 @@ def add_assignment_view(request, user_id):
                 assignment = form.save(commit=False)
                 assignment.assigned_to = staff
                 assignment.save()
-                return redirect('viewwork_assignment_userlist_staff')  # Moved inside success condition
+                return redirect('viewwork_assignment_userlist_staff')
 
     return render(request, 'workassignment/add_assignment.html', {
         'form': form,
         'staff': staff,
+        'task': task,
         'staff_code': staff_code,
+        'task_code': task_code,
     })
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import WorkAssignment
-from .forms import WorkAssignmentForm
 
 # Edit Assignment
-
+@login_required
 def edit_assignment(request, assignment_id):
     assignment = get_object_or_404(WorkAssignment, id=assignment_id)
     if request.method == 'POST':
@@ -117,12 +137,8 @@ def edit_assignment(request, assignment_id):
         form = WorkAssignmentForm(instance=assignment)
     return render(request, 'workassignment/edit_assignment.html', {'form': form})
 
-def delete_assignment(request, assignment_id):
-    assignment = get_object_or_404(WorkAssignment, id=assignment_id)
-    assignment.delete()
-    return redirect('viewwork_assignment_userlist_staff')
 
-#  Delete Assignment
+# Delete Assignment
 @login_required
 def delete_assignment(request, assignment_id):
     assignment = get_object_or_404(WorkAssignment, id=assignment_id)

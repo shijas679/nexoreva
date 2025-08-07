@@ -2,41 +2,49 @@
 {% load static %}
 
 {% block content %}
-<!-- Load the page-specific CSS -->
 <link rel="stylesheet" href="{% static 'css/assignment_userlist.css' %}">
 
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2> Work Assignment User List</h2>
-        <a href="{% url 'add_assignment' 0 %}" class="btn btn-success assign-button"> Assign Work</a>
+        <h2>Work Assignment User List</h2>
+        <a href="{% url 'add_assignment' 0 %}" class="btn btn-success assign-button">Assign Work</a>
     </div>
 
     <table class="table table-striped mt-3">
-        <thead>
+        <thead class="thead-dark">
             <tr>
-                <th>Unicode</th>
+                <th>Staff Unicode</th>
                 <th>Username</th>
                 <th>Role</th>
+                <th>Task Code</th> 
                 <th>Assigned Work</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in user_data %}
-            <tr>
-                <td>{{ item.unicode }}</td>
-                <td>{{ item.username }}</td>
-                <td>{{ item.role }}</td>
-                <td>{{ item.assignment }}</td>
-                <td>{{ item.status }}</td>
-                <td>
-                    <!-- Removed 'Assign' link -->
-                    <a href="{% url 'edit_assignment' item.assignment_id %}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="{% url 'delete_assignment' item.assignment_id %}" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-            {% endfor %}
+            {% if user_data %}
+                {% for item in user_data %}
+                    <tr>
+                        <td>{{ item.unicode }}</td>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.role }}</td>
+                        <td>{{ item.task_code|default:"—" }}</td>
+                        <td>{{ item.assignment|default:"—" }}</td>
+                        <td>{{ item.status|default:"—" }}</td>
+                        <td>
+                            <a href="{% url 'edit_assignment' item.assignment_id %}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{% url 'delete_assignment' item.assignment_id %}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        No work assignments found.
+                    </td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </div>

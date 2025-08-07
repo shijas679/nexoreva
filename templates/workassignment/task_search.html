@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Search Task by Unicode</h2>
+<form method="get">
+    <input type="text" name="q" placeholder="Enter Task Unicode" required>
+    <button type="submit">Search</button>
+</form>
+
+{% if task %}
+    <h3>Task Details</h3>
+    <p><strong>Title:</strong> {{ task.title }}</p>
+    <p><strong>Description:</strong> {{ task.description }}</p>
+    <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+    <p><strong>Unicode:</strong> {{ task.unicode }}</p>
+
+    <h4>Assigned Staff</h4>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Staff Code</th>
+                <th>Username</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in assigned_staff %}
+            <tr>
+                <td>{{ a.staff.unicode }}</td>
+                <td>{{ a.staff.username }}</td>
+                <td>{{ a.work_status }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% elif query %}
+    <p>No task found with this unicode.</p>
+{% endif %}
+{% endblock %}
