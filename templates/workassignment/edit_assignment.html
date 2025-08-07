@@ -1,12 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h3>Edit Assignment</h3>
-    <form method="post" enctype="multipart/form-data">
+<!-- External CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" href="{% static 'css/edit_assignment.css' %}">
+
+<div class="assignment-container">
+    <h2 class="assignment-heading">Edit Assignment</h2>
+    <form method="post" enctype="multipart/form-data" class="assignment-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="submit" class="submit-btn">Save Changes</button>
     </form>
 </div>
+
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("input[type='date']", {
+        dateFormat: "d/m/Y"
+    });
+</script>
 {% endblock %}
