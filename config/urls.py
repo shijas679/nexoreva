@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', include('dashboard.urls')),
-    path('staff/', include('staff.urls')), 
+    # path('staff/', include('staff.urls')), 
     path('certificate/', include('certificate.urls')),
 
     # Core dashboard (home/landing)
@@ -21,7 +21,7 @@ urlpatterns = [
     path('courses/', include('course.urls')),  # ✅ Added properly
     path('', include('attendance.urls')),      # << Make attendance home the default page
     path('dashboard/', include('dashboard.urls')),  # << dashboard now at /dashboard/
-    path('staff/', include('staff.urls')),
+    # path('staff/', include('staff.urls')),
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
     path('',include('task_trakking.urls'))
 ]

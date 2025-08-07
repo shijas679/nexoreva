@@ -1,52 +1,43 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'course_css/add-course.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
-  <h2 class="mb-4">📚 Add New Course</h2>
-
+  <h2 class="mb-4">✏️ Edit Course</h2>
   <form method="POST">
     {% csrf_token %}
     <fieldset>
-      <legend class="w-auto">Course Information</legend>
-
+      <legend class="w-auto">Edit Course Information</legend>
       <div class="mb-2">
         <label for="{{ form.name.id_for_label }}">Course Name:</label>
         {{ form.name }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.sub_column.id_for_label }}">Sub Column:</label>
         {{ form.sub_column }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.description.id_for_label }}">Description:</label>
         {{ form.description }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
         {{ form.start_date }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.end_date.id_for_label }}">End Date:</label>
         {{ form.end_date }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.fees.id_for_label }}">Fees (₹):</label>
         {{ form.fees }}
       </div>
     </fieldset>
-
-    <button type="submit" class="btn btn-success mt-3">Create Course</button>
+    <button type="submit" class="btn-success">Update Course</button>
   </form>
 </div>
 {% endblock %}
@@ -64,6 +55,7 @@ const subColumnSelect = document.getElementById('id_sub_column');
 
 function updateSubColumns() {
   const selectedCourse = courseSelect.value;
+  const currentValue = "{{ form.sub_column.value|escapejs }}";
   const options = subColumnOptions[selectedCourse] || [];
   
   subColumnSelect.innerHTML = '<option value="">---------</option>';
@@ -72,6 +64,9 @@ function updateSubColumns() {
     const option = document.createElement('option');
     option.value = sub;
     option.textContent = sub;
+    if (sub === currentValue) {
+      option.selected = true;
+    }
     subColumnSelect.appendChild(option);
   });
 }
