@@ -3,10 +3,20 @@ from django.contrib.auth.models import User
 from staff.models import Staff
 
 class Course(models.Model):
-    name = models.CharField(max_length=255)
+    COURSE_CHOICES = [
+        ('IT', 'IT'),
+        ('Engineering', 'Engineering'),
+        ('Medical', 'Medical'),
+    ]
+    SUB_COURSE_CHOICES = [
+        ('', '---------'), # Placeholder, will be set dynamically in forms
+    ]
+    name = models.CharField(max_length=255, choices=COURSE_CHOICES)
+    sub_course = models.CharField(max_length=255, choices=SUB_COURSE_CHOICES, blank=True)
     description = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
+    payment_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.name

@@ -7,13 +7,11 @@
 
 {% block content %}
 <div class="container">
-  <h2 class="mb-4">📚 Add New Course</h2>
-  
+  <h2 class="mb-4">✏️ Edit Course</h2>
   <form method="POST">
     {% csrf_token %}
     <fieldset>
-      <legend class="w-auto">Course Information</legend>
-
+      <legend class="w-auto">Edit Course Information</legend>
       <div class="mb-2">
         <label for="{{ form.name.id_for_label }}">Course Name:</label>
         {{ form.name }}
@@ -22,17 +20,14 @@
         <label for="{{ form.sub_course.id_for_label }}">Sub Course:</label>
         {{ form.sub_course }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.description.id_for_label }}">Description:</label>
         {{ form.description }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.start_date.id_for_label }}">Start Date:</label>
         {{ form.start_date }}
       </div>
-
       <div class="mb-2">
         <label for="{{ form.end_date.id_for_label }}">End Date:</label>
         {{ form.end_date }}
@@ -42,11 +37,9 @@
         {{ form.payment_amount }}
       </div>
     </fieldset>
-
-    <button type="submit" class="btn-success">Create Course</button>
+    <button type="submit" class="btn-success">Update Course</button>
   </form>
 </div>
-
 {% endblock %}
 <script>
 const subCourseOptions = {
@@ -58,12 +51,14 @@ const courseSelect = document.getElementById('id_course_name');
 const subCourseSelect = document.getElementById('id_sub_course');
 function updateSubCourses() {
   const selected = courseSelect.value;
+  const current = "{{ form.sub_course.value|escapejs }}";
   subCourseSelect.innerHTML = '<option value="">---------</option>';
   if (subCourseOptions[selected]) {
     subCourseOptions[selected].forEach(opt => {
       const option = document.createElement('option');
       option.value = opt;
       option.text = opt;
+      if (opt === current) option.selected = true;
       subCourseSelect.appendChild(option);
     });
   }
