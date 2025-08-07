@@ -17,6 +17,7 @@
         <th>#</th>
         <th>Course Name</th>
         <th>Sub Column</th>
+        <th>Unicode</th>
         <th>Start Date</th>
         <th>End Date</th>
         <th>Fees</th>
@@ -29,6 +30,7 @@
         <td>{{ forloop.counter }}</td>
         <td>{{ course.name }}</td>
         <td>{{ course.sub_column }}</td>
+        <td>{{ course.unicode }}</td>
         <td>{{ course.start_date }}</td>
         <td>{{ course.end_date }}</td>
         <td>{{ course.fees }}</td>
@@ -36,7 +38,7 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="7">No courses available.</td>
+        <td colspan="8">No courses available.</td>
       </tr>
       {% endfor %}
     </tbody>

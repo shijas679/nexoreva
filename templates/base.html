@@ -19,5 +19,8 @@
     </main>
 
     <script src="{% static 'js/script.js' %}"></script>
+    
+    <!-- Extra JavaScript from child templates -->
+    {% block extra_js %}{% endblock %}
   </body>
 </html>
