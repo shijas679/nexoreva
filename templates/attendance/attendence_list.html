@@ -35,7 +35,7 @@
                 <th>Time In</th>
                 <th>Time Out</th>
                 <th>Status</th>
-                <th>Daily Task</th> <!-- 🆕 New column added -->
+                
             </tr>
         </thead>
         <tbody>
@@ -55,9 +55,6 @@
                     {% else %}
                         {{ data.status }}
                     {% endif %}
-                </td>
-                <td>
-                    {{ data.task|default:"No Task Submitted" }} <!-- 🆕 Task content shown -->
                 </td>
             </tr>
             {% empty %}
