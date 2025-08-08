@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/leave_details.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-card">
+    <h2 class="leave-title">Leave Details</h2>
+    <table class="leave-table">
+        <tr>
+            <th>Requested On</th>
+            <th>Staff Name</th>
+            <th>Staff Code</th>
+            <th>From Date</th>
+            <th>To Date</th>
+            <th>Reason</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record.request_date|date:"Y-m-d H:i" }}</td>
+            <td>{{ record.staff.full_name }}</td>
+            <td>{{ record.staff.staff_code }}</td>
+            <td>{{ record.from_date }}</td>
+            <td>{{ record.to_date }}</td>
+            <td>{{ record.reason }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No leave records found.</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a class="back-link" href="{% url 'attendence_details' %}">Back</a>
+</div>
+{% endblock %}
