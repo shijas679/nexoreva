@@ -467,9 +467,15 @@ button[type="submit"]:hover {
   box-shadow: 0 6px 24px 0 rgba(39,197,255,0.13);
 }
 
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1em; /* adds spacing between the buttons */
+  margin-top: 1.5em;
+}
+
 .leave-btn {
   display: block;
-  margin-top: 0.2em;
   background: transparent;
   color: var(--primary-color);
   font-weight: 600;
