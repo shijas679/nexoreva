@@ -84,5 +84,42 @@
       </div>
     </div>
   </div>
+  <div class="button-group">
+    <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+    <a href="{% url 'create_course' %}" class="btn-primary">📝 Create Course</a>
+  </div>
+
+  <table class="course-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Course Name</th>
+        <th>Sub Column</th>
+        <th>Unicode</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Fees</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for course in courses %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ course.name }}</td>
+        <td>{{ course.sub_column }}</td>
+        <td>{{ course.unicode }}</td>
+        <td>{{ course.start_date }}</td>
+        <td>{{ course.end_date }}</td>
+        <td>{{ course.fees }}</td>
+        <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a></td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8">No courses available.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

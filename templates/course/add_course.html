@@ -103,7 +103,10 @@
 const subColumnOptions = {
   'IT': ['Web Development', 'Data Science', 'Networking', 'Cyber Security'],
   'Engineering': ['Computer Science Engineering (CSE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering'],
-  'Medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)']
+  'Medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)'],
+  'Business': ['Accounting', 'Marketing', 'Finance', 'Human Resources'],
+  'Arts': ['Painting', 'Music', 'Dance', 'Literature'],
+  'Science': ['Physics', 'Chemistry', 'Biology', 'Mathematics']
 };
 
 // Function to generate unicode
@@ -116,16 +119,10 @@ function generateUnicode() {
   }
   
   const selectedCourse = courseSelect.value;
-  let prefix = '';
+  let prefix = 'GEN';
   
-  if (selectedCourse === 'IT') {
-    prefix = 'IT';
-  } else if (selectedCourse === 'Engineering') {
-    prefix = 'ENG';
-  } else if (selectedCourse === 'Medical') {
-    prefix = 'MED';
-  } else {
-    prefix = 'GEN';
+  if (selectedCourse) {
+    prefix = selectedCourse.substring(0, 3).toUpperCase();
   }
   
   // Generate 5 random digits
@@ -177,8 +174,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   if (courseSelect && subColumnSelect) {
     courseSelect.addEventListener('change', updateSubColumns);
-    subColumnSelect.addEventListener('change', handleSubColumnChange);
+    
+    // Initialize sub columns based on current selection
     updateSubColumns();
+    
+    // Generate unicode if course is pre-filled
+    if (courseSelect.value) {
+      generateUnicode();
+    }
+  } else {
+    console.log('Required elements not found');
   }
 });
 </script>
