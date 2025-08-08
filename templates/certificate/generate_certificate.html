@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/certificate.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="container certificate-container">
+    <h2>Certificate Generator</h2>
+
+    <!-- Certificate Form Section -->
+    <div class="form-container">
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="bi bi-award"></i>
+          Certificate Details
+        </h3>
+        
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="form-grid">
+            <div class="input-group{% if form.name.errors %} has-error{% endif %} full-width">
+              <input type="text" name="name" id="name" placeholder=" " required>
+              <label for="name">Full Name</label>
+              {% if form.name.errors %}
+                <div class="error-message">{{ form.name.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <div class="input-group{% if form.role.errors %} has-error{% endif %}">
+              <input type="text" name="role" id="role" placeholder=" " required>
+              <label for="role">Designation</label>
+              {% if form.role.errors %}
+                <div class="error-message">{{ form.role.errors|striptags }}</div>
+              {% endif %}
+            </div>
+
+            <div class="input-group{% if form.date.errors %} has-error{% endif %}">
+              <input type="text" name="date" id="date" placeholder=" " pattern="\d{2}-\d{2}-\d{4}" required>
+              <label for="date">Date (DD-MM-YYYY)</label>
+              {% if form.date.errors %}
+                <div class="error-message">{{ form.date.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">
+              <i class="bi bi-award"></i>
+              Generate Certificate
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    {% if certificate_url %}
+    <!-- Certificate Download Section -->
+    <div class="download-section">
+      <div class="download-card">
+        <div class="success-header">
+          <i class="bi bi-check-circle-fill"></i>
+          <h3>Certificate Generated Successfully!</h3>
+          <p>Your professional certificate is ready for download.</p>
+        </div>
+
+        <div class="download-actions">
+          <a href="{{ certificate_url }}" class="btn-download" download>
+            <i class="bi bi-download"></i>
+            Download Certificate
+          </a>
+          <button onclick="printCertificate()" class="btn-print">
+            <i class="bi bi-printer"></i>
+            Print Certificate
+          </button>
+        </div>
+
+        <!-- Certificate Preview -->
+        <div class="certificate-preview">
+          <div class="preview-header">
+            <h4>Preview</h4>
+            <button onclick="toggleFullscreen()" class="btn-fullscreen">
+              <i class="bi bi-arrows-fullscreen"></i>
+              View Full Size
+            </button>
+          </div>
+          <div class="preview-wrapper">
+            <img src="{{ certificate_url }}" alt="Certificate Preview" id="certificateImage" class="certificate-image">
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Generate Another Section -->
+    {% if certificate_url %}
+    <div class="generate-another-section">
+      <div class="generate-another-card">
+        <h4>Generate Another Certificate</h4>
+        <p>Need to create another certificate? Click below to start fresh.</p>
+        <a href="{% url 'generate_certificate' %}" class="btn-generate-another">
+          <i class="bi bi-plus-circle"></i>
+          Create New Certificate
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Fullscreen Modal -->
+<div id="fullscreenModal" class="fullscreen-modal" onclick="closeFullscreen()">
+  <div class="modal-content">
+    <span class="close-modal" onclick="closeFullscreen()">&times;</span>
+    <img id="fullscreenImage" class="fullscreen-image" src="" alt="Certificate Full View">
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Auto-format date input
+document.getElementById('date').addEventListener('input', function(e) {
+  let value = e.target.value.replace(/\D/g, '');
+  if (value.length >= 2) {
+    value = value.substring(0, 2) + '-' + value.substring(2);
+  }
+  if (value.length >= 5) {
+    value = value.substring(0, 5) + '-' + value.substring(5, 9);
+  }
+  e.target.value = value;
+});
+
+// Print certificate function
+function printCertificate() {
+  const certificateUrl = "{{ certificate_url }}";
+  const printWindow = window.open('', '_blank');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Certificate</title>
+        <style>
+          body { margin: 0; padding: 20px; text-align: center; }
+          img { max-width: 100%; height: auto; }
+          @media print { body { padding: 0; } }
+        </style>
+      </head>
+      <body>
+        <img src="${certificateUrl}" alt="Certificate" onload="window.print(); window.close();">
+      </body>
+    </html>
+  `);
+}
+
+// Fullscreen functionality
+function toggleFullscreen() {
+  const modal = document.getElementById('fullscreenModal');
+  const fullscreenImage = document.getElementById('fullscreenImage');
+  const certificateImage = document.getElementById('certificateImage');
+  
+  fullscreenImage.src = certificateImage.src;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFullscreen() {
+  const modal = document.getElementById('fullscreenModal');
+  modal.style.display = 'none';
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'Escape') {
+    closeFullscreen();
+  }
+});
+
+// Form validation
+document.querySelector('form').addEventListener('submit', function(e) {
+  const dateInput = document.getElementById('date');
+  const datePattern = /^\d{2}-\d{2}-\d{4}$/;
+  
+  if (!datePattern.test(dateInput.value)) {
+    e.preventDefault();
+    alert('Please enter date in DD-MM-YYYY format');
+    dateInput.focus();
+  }
+});
+
+// Add loading state to submit button
+document.querySelector('form').addEventListener('submit', function() {
+  const submitBtn = this.querySelector('.btn-submit');
+  const originalText = submitBtn.innerHTML;
+  submitBtn.disabled = true;
+  submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Generating...';
+  
+  // Reset after 10 seconds in case of any issues
+  setTimeout(() => {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
+  }, 10000);
+});
+</script>
+{% endblock %}
