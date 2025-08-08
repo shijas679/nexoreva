@@ -26,7 +26,8 @@ urlpatterns = [
 
     # path('staff/', include('staff.urls')),
     path('workassignment/', include('workassignment.urls')),  # ✅ keep this line
-    path('',include('task_trakking.urls'))
+    path('',include('task_trakking.urls')),
+    path('track/',include('payments.urls')),  # ✅ Added payments tracking
 ]
 
 if settings.DEBUG:

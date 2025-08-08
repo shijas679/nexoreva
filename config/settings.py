@@ -26,12 +26,14 @@ INSTALLED_APPS = [
     'dashboard',
     'course',
     'attendance',
+    'payments', 
 
     # Third-party
     'crispy_forms',
     'certificate',
     'workassignment',
-    'task_trakking'
+    'task_trakking',
+    'crispy_bootstrap4',
     
 
 
@@ -43,7 +45,8 @@ INSTALLED_APPS = [
 
 
 # Crispy Forms Settings
-CRISPY_TEMPLATE_PACK = 'bootstrap4'  # or 'bootstrap5' if you're using Bootstrap 5
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+ # or 'bootstrap5' if you're using Bootstrap 5
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
