@@ -105,7 +105,7 @@ def attendance_details(request):
 
     attendance_details = []
     delta_days = (to_date - from_date).days + 1
-
+     
     for staff in all_staff:
         for offset in range(delta_days):
             current_date = from_date + timedelta(days=offset)

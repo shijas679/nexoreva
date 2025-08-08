@@ -31,3 +31,4 @@ def dashboard_view(request):
         'attendance': attendance  # ✅ renamed from 'attendence' to 'attendance' for correct spelling
     }
     return render(request, 'dashboard/dashboard.html', context)
+
