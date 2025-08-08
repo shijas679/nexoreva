@@ -27,30 +27,28 @@ a.btn-success:hover {
   background-color: #218838;
 }
 
-/* Alert message styling */
-.alert {
-  margin-bottom: 1rem;
-  padding: 0.75rem;
-  border-radius: 4px;
-  border: 1px solid;
+/* Button group styling */
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
 }
 
-.alert-success {
-  background-color: #d4edda;
-  border-color: #c3e6cb;
-  color: #155724;
+a.btn-primary {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
 }
 
-.alert-danger {
-  background-color: #f8d7da;
-  border-color: #f5c6cb;
-  color: #721c24;
-}
-
-.alert-info {
-  background-color: #d1ecf1;
-  border-color: #bee5eb;
-  color: #0c5460;
+a.btn-primary:hover {
+  background-color: #0056b3;
+  color: white;
+  text-decoration: none;
 }
 
 .course-table {

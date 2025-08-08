@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/status_styles.css' %}">
+<link rel="stylesheet" href="{% static 'css/task_status.css' %}">
 {% endblock %}
 
 
@@ -54,7 +54,7 @@
             </table>
 
             <div class="button-group">
-                <a href="{% url 'update_status' staff_code  %}" class="btn-link">Update Status</a>
+                <a href="{% url 'update_status' staff_code %}" class="btn-link">Update Status</a>
             </div>
             {% else %}
             <div class="no-tasks-message">

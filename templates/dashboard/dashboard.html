@@ -9,8 +9,6 @@
 
 {% block content %}
 
- 
-    
 
 <div class="container">
   <div class="dashboard-content">
@@ -60,6 +58,11 @@
         <a href="{% url 'generate_certificate' %}" class="action-btn">
         <i class="bi bi-journal-bookmark-fill"></i>
         <span>Certificates</span>
+      </a>
+
+      <a href="{% url 'payment_tracking' %}" class="action-btn">
+        <i class="bi bi-clipboard-check"></i>
+        <span>Track Payments</span>
       </a>
     </div>
   </div>
