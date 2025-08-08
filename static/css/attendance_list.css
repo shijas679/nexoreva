@@ -108,6 +108,65 @@ body {
 .attendance-table td {
     color: #37425b;
 }
+
+/* Daily Task Form Styling */
+.daily-task-form {
+    margin-top: 30px;
+    background: #ffffff;
+    padding: 25px 28px;
+    border-radius: 18px;
+    box-shadow: 0 4px 16px rgba(28, 45, 97, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.daily-task-form input[type="text"],
+.daily-task-form textarea {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1.4px solid #bcd9fd;
+    background: #f4f9ff;
+    font-size: 15px;
+    font-family: 'Segoe UI', sans-serif;
+    transition: all 0.2s ease-in-out;
+}
+
+.daily-task-form input[type="text"]:focus,
+.daily-task-form textarea:focus {
+    outline: none;
+    border-color: #478cf1;
+    background: #e9f2fe;
+}
+
+.daily-task-form button {
+    background: linear-gradient(90deg, #3366ff 0%, #825cff 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    font-weight: bold;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.daily-task-form button:hover {
+    background: linear-gradient(90deg, #2d58d4 0%, #6543e5 100%);
+    transform: scale(1.03);
+}
+
+/* Optional: Show error messages nicely */
+.task-error-message {
+    color: #d83a3a;
+    background: #fff0f0;
+    padding: 10px;
+    border-left: 4px solid #d83a3a;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: 12px;
+}
+
 /* Responsive table scroll for tiny screens */
 @media (max-width: 650px) {
     .attendance-table, .attendance-table tbody, .attendance-table tr, .attendance-table td, .attendance-table th {
