@@ -9,7 +9,10 @@
 <div class="container">
   <h2 class="mb-4">📘 Courses</h2>
 
-  <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+  <div class="button-group">
+    <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+    <a href="{% url 'create_course' %}" class="btn-primary">📝 Create Course</a>
+  </div>
 
   <table class="course-table">
     <thead>
