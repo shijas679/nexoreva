@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load static %}
-
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/task_status.css' %}">
+<link rel="stylesheet" href="{% static 'css/status_styles.css' %}">
 {% endblock %}
+
 
 {% block content %}
 <div class="container">
@@ -16,14 +16,22 @@
             <button type="submit" name="fetch">Fetch Tasks</button>
         </div>
 
+        {% if error_message %}
+        <div class="error-message">
+            {{ error_message }}
+        </div>
+        {% endif %}
+
         {% if assigned_tasks %}
         <!-- Task Table Section -->
         <div class="task-section">
             <h2>Assigned Tasks</h2>
+            {% if assigned_tasks.count > 0 %}
             <table>
-                <caption>List of tasks assigned to the staff member</caption>
+                <caption>List of assigned tasks to {{ name }}</caption>
                 <thead>
                     <tr>
+                        <th scope="col">Task Code</th>
                         <th scope="col">Task Title</th>
                         <th scope="col">Task Description</th>
                         <th scope="col">Start Date</th>
@@ -34,25 +42,25 @@
                 <tbody>
                     {% for task in assigned_tasks %}
                     <tr>
+                        <td>{{ task.task_code }}</td>
                         <td>{{ task.task_title }}</td>
                         <td>{{ task.description }}</td>
                         <td>{{ task.start_date }}</td>
                         <td>{{ task.end_date }}</td>
-                        <td>
-                            <label for="status_{{ task.id }}" class="visually-hidden">Status for {{ task.task_title }}</label>
-                            <select name="status_{{ task.id }}" id="status_{{ task.id }}">
-                                <option value="pending" {% if task.status == 'pending' %}selected{% endif %}>Pending</option>
-                                <option value="completed" {% if task.status == 'completed' %}selected{% endif %}>Completed</option>
-                            </select>
-                        </td>
+                        <td>{{ task.status }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
 
             <div class="button-group">
-                <button type="submit" name="update">Update Status</button>
+                <a href="{% url 'update_status' staff_code  %}" class="btn-link">Update Status</a>
             </div>
+            {% else %}
+            <div class="no-tasks-message">
+                <p>No tasks assigned to {{ name }}.</p>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </form>
