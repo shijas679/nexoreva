@@ -9,40 +9,134 @@
 <div class="container">
   <h2 class="mb-4">📘 Courses</h2>
 
-  <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+  <!-- Display messages -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% else %}alert-info{% endif %}" style="margin-bottom: 1rem; padding: 0.75rem; border-radius: 4px; border: 1px solid;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
 
-  <table class="course-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Course Name</th>
-        <th>Sub Column</th>
-        <th>Unicode</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Fees</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for course in courses %}
-      <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ course.name }}</td>
-        <td>{{ course.sub_column }}</td>
-        <td>{{ course.unicode }}</td>
-        <td>{{ course.start_date }}</td>
-        <td>{{ course.end_date }}</td>
-        <td>{{ course.fees }}</td>
-        <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a></td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="8">No courses available.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+    <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
+    
+    <div class="bulk-actions">
+      <button type="button" class="btn-select" onclick="toggleSelectAll()">
+        <span style="margin-right: 8px;">☑️</span>Select All
+      </button>
+      <button type="button" class="btn-delete" onclick="deleteSelected()" disabled id="deleteBtn">
+        <span style="margin-right: 8px;">🗑️</span>Delete Selected
+      </button>
+    </div>
+  </div>
+
+  <form id="bulkForm" method="POST" action="{% url 'delete_courses' %}">
+    {% csrf_token %}
+    <table class="course-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Course Name</th>
+          <th>Sub Column</th>
+          <th>Unicode</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Fees</th>
+          <th>Actions</th>
+          <th>Select</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for course in courses %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ course.name }}</td>
+          <td>{{ course.sub_column }}</td>
+          <td>{{ course.unicode }}</td>
+          <td>{{ course.start_date }}</td>
+          <td>{{ course.end_date }}</td>
+          <td>{{ course.fees }}</td>
+          <td>
+            <a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a>
+            <a href="{% url 'edit_course' course.id %}" class="edit-btn">✏️ Edit</a>
+          </td>
+          <td style="text-align: center;">
+            <input type="checkbox" name="course_ids" value="{{ course.id }}" class="course-checkbox" onchange="updateDeleteButton()">
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9">No courses available.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </form>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script>
+let selectAllChecked = false;
+
+function toggleSelectAll() {
+  const checkboxes = document.querySelectorAll('.course-checkbox');
+  const selectAllBtn = document.querySelector('.btn-select');
+  
+  selectAllChecked = !selectAllChecked;
+  
+  checkboxes.forEach(checkbox => {
+    checkbox.checked = selectAllChecked;
+  });
+  
+  if (selectAllChecked) {
+    selectAllBtn.innerHTML = '<span style="margin-right: 8px;">❌</span>Deselect All';
+  } else {
+    selectAllBtn.innerHTML = '<span style="margin-right: 8px;">☑️</span>Select All';
+  }
+  
+  updateDeleteButton();
+}
+
+function updateDeleteButton() {
+  const checkboxes = document.querySelectorAll('.course-checkbox:checked');
+  const deleteBtn = document.getElementById('deleteBtn');
+  
+  if (checkboxes.length > 0) {
+    deleteBtn.disabled = false;
+    deleteBtn.innerHTML = `<span style="margin-right: 8px;">🗑️</span>Delete Selected (${checkboxes.length})`;
+  } else {
+    deleteBtn.disabled = true;
+    deleteBtn.innerHTML = '<span style="margin-right: 8px;">🗑️</span>Delete Selected';
+  }
+}
+
+function deleteSelected() {
+  const checkboxes = document.querySelectorAll('.course-checkbox:checked');
+  
+  if (checkboxes.length === 0) {
+    alert('Please select at least one course to delete.');
+    return;
+  }
+  
+  const courseNames = [];
+  checkboxes.forEach(checkbox => {
+    const row = checkbox.closest('tr');
+    const courseName = row.cells[1].textContent; // Course Name column
+    courseNames.push(courseName);
+  });
+  
+  const message = `Are you sure you want to delete the following courses?\n\n${courseNames.join('\n')}\n\nThis action cannot be undone.`;
+  
+  if (confirm(message)) {
+    document.getElementById('bulkForm').submit();
+  }
+}
+
+// Initialize delete button state
+document.addEventListener('DOMContentLoaded', function() {
+  updateDeleteButton();
+});
+</script>
 {% endblock %}

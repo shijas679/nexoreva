@@ -2,6 +2,8 @@
 
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.contrib import messages
 from staff.models import Staff
 from .models import Course, Enrollment
 from .forms import CourseForm
@@ -63,3 +65,25 @@ def edit_course(request, course_id):
     else:
         form = CourseForm(instance=course)
     return render(request, 'course/edit_course.html', {'form': form, 'course': course})
+
+def delete_courses(request):
+    if request.method == 'POST':
+        course_ids = request.POST.getlist('course_ids')
+        
+        if not course_ids:
+            messages.error(request, 'No courses selected for deletion.')
+            return redirect('course_list')
+        
+        try:
+            # Delete the selected courses
+            deleted_count = Course.objects.filter(id__in=course_ids).delete()[0]
+            
+            if deleted_count == 1:
+                messages.success(request, f'{deleted_count} course has been deleted successfully.')
+            else:
+                messages.success(request, f'{deleted_count} courses have been deleted successfully.')
+                
+        except Exception as e:
+            messages.error(request, f'Error deleting courses: {str(e)}')
+    
+    return redirect('course_list')
