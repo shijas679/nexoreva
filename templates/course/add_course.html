@@ -9,38 +9,23 @@
 {% block content %}
 <div class="main-content">
   <div class="container">
-    <h2>Add New Course</h2>
+    <!-- Page Header -->
+    <div class="page-header">
+      <h2>
+        <i class="bi bi-plus-circle"></i>
+        Add New Course
+      </h2>
+    </div>
 
-  <!-- Information Alert -->
-  <div class="alert alert-info" role="alert">
-    <strong>Important:</strong> All courses must have a course category and sub-course selected. 
-    If you don't see sub-courses in the dropdown, please go to 
-    <a href="{% url 'create_course' %}" class="alert-link">Create Course</a> first to set up the course structure.
-  </div>
+    <!-- Information Alert -->
+    <div class="alert alert-info" role="alert">
+      <strong>Important:</strong> All courses must have a course category and sub-course selected. 
+      If you don't see sub-courses in the dropdown, please go to 
+      <a href="{% url 'create_course' %}" class="alert-link">Create Course</a> first to set up the course structure.
+    </div>
 
-  <form method="POST" id="courseForm">
-    {% csrf_token %}
-    <fieldset>
-      <legend class="w-auto">Course Information</legend>
-
-      <div class="mb-2">
-        <label for="{{ form.name.id_for_label }}">Course Name: <span class="text-danger">*</span></label>
-        {{ form.name }}
-        {% if form.name.errors %}
-          <div class="text-danger small">{{ form.name.errors.0 }}</div>
-        {% endif %}
-      </div>
-
-      <div class="mb-2">
-        <label for="{{ form.sub_column.id_for_label }}">Sub Column: <span class="text-danger">*</span></label>
-        {{ form.sub_column }}
-        {% if form.sub_column.errors %}
-          <div class="text-danger small">{{ form.sub_column.errors.0 }}</div>
-        {% endif %}
-        <small class="form-text text-muted">Select a course category first to see available sub-courses.</small>
-      </div>
     <div class="form-container">
-      <form method="POST">
+      <form method="POST" id="courseForm">
         {% csrf_token %}
         
         <!-- Course Information Section -->
@@ -53,7 +38,7 @@
           <div class="form-grid">
             <div class="input-group{% if form.name.errors %} has-error{% endif %}">
               {{ form.name }}
-              <label for="{{ form.name.id_for_label }}">Course Name</label>
+              <label for="{{ form.name.id_for_label }}">Course Name <span class="text-danger">*</span></label>
               {% if form.name.errors %}
                 <div class="error-message">{{ form.name.errors|striptags }}</div>
               {% endif %}
@@ -61,15 +46,16 @@
 
             <div class="input-group{% if form.sub_column.errors %} has-error{% endif %}">
               {{ form.sub_column }}
-              <label for="{{ form.sub_column.id_for_label }}">Sub Column</label>
+              <label for="{{ form.sub_column.id_for_label }}">Sub Column <span class="text-danger">*</span></label>
               {% if form.sub_column.errors %}
                 <div class="error-message">{{ form.sub_column.errors|striptags }}</div>
               {% endif %}
+              <small class="form-text text-muted">Select a course category first to see available sub-courses.</small>
             </div>
 
             <div class="input-group{% if form.unicode.errors %} has-error{% endif %}">
               {{ form.unicode }}
-              <label for="{{ form.unicode.id_for_label }}">Unicode</label>
+              <label for="{{ form.unicode.id_for_label }}">Course Code</label>
               {% if form.unicode.errors %}
                 <div class="error-message">{{ form.unicode.errors|striptags }}</div>
               {% endif %}
@@ -109,16 +95,8 @@
           </div>
         </div>
 
-      <div class="mb-2">
-        <label for="{{ form.fees.id_for_label }}">Fees (₹):</label>
-        {{ form.fees }}
-      </div>
-    </fieldset>
-
-    <button type="submit" class="btn btn-success mt-3" id="submitBtn">Create Course</button>
-  </form>
         <div class="form-actions">
-          <button type="submit" class="btn-submit">
+          <button type="submit" class="btn-submit" id="submitBtn">
             <i class="bi bi-check-circle"></i>
             Create Course
           </button>
@@ -216,22 +194,6 @@ function updateSubColumns() {
       console.error('Error fetching sub-courses:', error);
       subColumnSelect.innerHTML = '<option value="">Error loading sub-courses</option>';
     });
-  const selectedCourse = courseSelect.value;
-  const options = subColumnOptions[selectedCourse] || [];
-  
-  // Clear existing options
-  subColumnSelect.innerHTML = '<option value="">Select Sub Column</option>';
-  
-  // Add new options
-  options.forEach(sub => {
-    const option = document.createElement('option');
-    option.value = sub;
-    option.textContent = sub;
-    subColumnSelect.appendChild(option);
-  });
-  
-  // Generate new unicode when course changes
-  generateUnicode();
 }
 
 // Function to handle sub column change
@@ -277,7 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Disable submit button to prevent double submission
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Creating...';
+        submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating...';
       }
     });
   }

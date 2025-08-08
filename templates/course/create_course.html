@@ -7,69 +7,100 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <h2 class="mb-4">📚 Create New Course Structure</h2>
-  
-  <!-- Information Alert -->
-  <div class="alert alert-warning" role="alert">
-    <strong>Important:</strong> You must create at least one sub-course for each course category. 
-    This ensures that when adding courses later, there will always be sub-courses available to select from.
-  </div>
+<div class="main-content">
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h2>
+        <i class="bi bi-plus-square"></i>
+        Create New Course Structure
+      </h2>
+    </div>
 
-  <form method="POST">
-    {% csrf_token %}
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Course Information</h5>
+    <!-- Information Alert -->
+    <div class="alert alert-warning" role="alert">
+      <strong>Important:</strong> You must create at least one sub-course for each course category. 
+      This ensures that when adding courses later, there will always be sub-courses available to select from.
+    </div>
+
+    <div class="form-container">
+      <form method="POST" id="createCourseForm">
+        {% csrf_token %}
         
-        <div class="mb-3">
-          <label for="course_name" class="form-label">Course Name: <span class="text-danger">*</span></label>
-          <input type="text" class="form-control" id="course_name" name="course_name" required placeholder="Enter course name (e.g., Engineering, Medical, IT)">
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">Sub Courses: <span class="text-danger">*</span></label>
-          <div id="sub_courses_container">
-            <!-- Sub-course input fields will be added here -->
-          </div>
+        <!-- Course Information Section -->
+        <div class="form-section">
+          <h3 class="section-title">
+            <i class="bi bi-book"></i>
+            Course Structure Information
+          </h3>
           
-          <div class="mb-2">
-            <div class="button-group">
-              <button type="button" id="add_more_btn" class="btn btn-success" style="background-color: #28a745; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-                ➕ Add Sub Course
-              </button>
+          <div class="form-grid">
+            <div class="input-group full-width">
+              <input type="text" id="course_name" name="course_name" required placeholder=" ">
+              <label for="course_name">Course Name <span class="text-danger">*</span></label>
+              <small class="form-text text-muted">Enter course name (e.g., Engineering, Medical, IT)</small>
+            </div>
+
+            <div class="input-group full-width">
+              <label class="sub-courses-label">Sub Courses <span class="text-danger">*</span></label>
+              <div id="sub_courses_container" class="sub-courses-container">
+                <!-- Sub-course input fields will be added here -->
+              </div>
+              
+              <div class="add-sub-course-btn-container">
+                <button type="button" id="add_more_btn" class="btn-add-sub-course">
+                  <i class="bi bi-plus-circle"></i>
+                  Add Sub Course
+                </button>
+              </div>
+              
+              <small class="form-text text-muted">
+                Add at least one sub-course. Examples: "Computer Science Engineering (CSE)", "MBBS", "Web Development"
+              </small>
             </div>
           </div>
-          
-          <small class="form-text text-muted">
-            Add at least one sub-course. Examples: "Computer Science Engineering (CSE)", "MBBS (Bachelor of Medicine & Bachelor of Surgery)", "Web Development"
-          </small>
         </div>
 
-        <button type="submit" class="btn btn-primary">Create Course Structure</button>
-      </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" id="submitBtn">
+            <i class="bi bi-check-circle"></i>
+            Create Course Structure
+          </button>
+          <a href="{% url 'course_list' %}" class="btn-cancel">
+            <i class="bi bi-arrow-left"></i>
+            Back to Courses
+          </a>
+        </div>
+      </form>
     </div>
-  </form>
+  </div>
 </div>
 
+{% endblock %}
+
+{% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const addMoreBtn = document.getElementById('add_more_btn');
   const subCoursesContainer = document.getElementById('sub_courses_container');
   const courseNameInput = document.getElementById('course_name');
+  const submitBtn = document.getElementById('submitBtn');
+  const form = document.getElementById('createCourseForm');
 
   function createSubCourseInput() {
     const inputBox = document.createElement('div');
-    inputBox.className = 'sub-course-input';
+    inputBox.className = 'sub-course-input-wrapper';
     inputBox.innerHTML = `
-      <div class="input-group">
-        <input type="text" class="form-control" name="sub_courses[]" placeholder="Enter sub-course name" required>
-        <button type="button" class="btn btn-danger remove-btn">Remove</button>
+      <div class="sub-course-input-group">
+        <input type="text" class="sub-course-input" name="sub_courses[]" placeholder="Enter sub-course name" required>
+        <button type="button" class="btn-remove-sub-course" title="Remove sub-course">
+          <i class="bi bi-trash"></i>
+        </button>
       </div>
     `;
 
     // Add remove functionality
-    const removeBtn = inputBox.querySelector('.remove-btn');
+    const removeBtn = inputBox.querySelector('.btn-remove-sub-course');
     removeBtn.addEventListener('click', function() {
       inputBox.remove();
     });
@@ -89,8 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
     inputBox.querySelector('input').focus();
   });
 
-  // Form validation
-  const form = document.querySelector('form');
+  // Form validation and submission
   form.addEventListener('submit', function(e) {
     const courseName = courseNameInput.value.trim();
     const subCourseInputs = document.querySelectorAll('input[name="sub_courses[]"]');
@@ -98,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!courseName) {
       e.preventDefault();
-      alert('Please enter a course name.');
+      showNotification('Please enter a course name.', 'warning');
       return;
     }
 
@@ -110,8 +140,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (!hasValidSubCourse) {
       e.preventDefault();
-      alert('Please add at least one sub-course.');
+      showNotification('Please add at least one sub-course.', 'warning');
       return;
+    }
+
+    // Show loading state
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Creating...';
     }
   });
   
