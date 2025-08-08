@@ -15,10 +15,16 @@
         <i class="bi bi-journal-bookmark"></i>
         Courses
       </h2>
-      <a href="{% url 'add_course' %}" class="btn-add-course">
-        <i class="bi bi-plus-circle"></i>
-        Add Course
-      </a>
+      <div class="header-actions">
+        <a href="{% url 'create_course' %}" class="btn-create-course">
+          <i class="bi bi-plus-square"></i>
+          Create Course
+        </a>
+        <a href="{% url 'add_course' %}" class="btn-add-course">
+          <i class="bi bi-plus-circle"></i>
+          Add Course
+        </a>
+      </div>
     </div>
 
     <!-- Courses Table -->
@@ -70,11 +76,17 @@
                 <div class="empty-content">
                   <i class="bi bi-journal-bookmark"></i>
                   <h4>No courses available</h4>
-                  <p>Start by adding your first course to the system.</p>
-                  <a href="{% url 'add_course' %}" class="btn-add-first">
-                    <i class="bi bi-plus-circle"></i>
-                    Add First Course
-                  </a>
+                  <p>Start by creating your first course with sub-courses or add a single course.</p>
+                  <div class="empty-actions">
+                    <a href="{% url 'create_course' %}" class="btn-add-first create">
+                      <i class="bi bi-plus-square"></i>
+                      Create Course Structure
+                    </a>
+                    <a href="{% url 'add_course' %}" class="btn-add-first add">
+                      <i class="bi bi-plus-circle"></i>
+                      Add Single Course
+                    </a>
+                  </div>
                 </div>
               </td>
             </tr>
@@ -84,42 +96,5 @@
       </div>
     </div>
   </div>
-  <div class="button-group">
-    <a href="{% url 'add_course' %}" class="btn-success">➕ Add Course</a>
-    <a href="{% url 'create_course' %}" class="btn-primary">📝 Create Course</a>
-  </div>
-
-  <table class="course-table">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Course Name</th>
-        <th>Sub Column</th>
-        <th>Unicode</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Fees</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for course in courses %}
-      <tr>
-        <td>{{ forloop.counter }}</td>
-        <td>{{ course.name }}</td>
-        <td>{{ course.sub_column }}</td>
-        <td>{{ course.unicode }}</td>
-        <td>{{ course.start_date }}</td>
-        <td>{{ course.end_date }}</td>
-        <td>{{ course.fees }}</td>
-        <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a></td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="8">No courses available.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
 </div>
 {% endblock %}

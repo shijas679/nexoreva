@@ -1,43 +1,68 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'course_css/add-course.css' %}">
+<link rel="stylesheet" href="{% static 'css/course.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-  <h2 class="mb-4">📝 Create New Course</h2>
+<div class="main-content">
+  <div class="container">
+    <h2>Create New Course</h2>
 
-  <form method="POST">
-    {% csrf_token %}
-    <fieldset>
-      <legend class="w-auto">Course Information</legend>
+    <div class="form-container">
+      <div class="form-section">
+        <h3 class="section-title">
+          <i class="bi bi-journal-plus"></i>
+          Course Information
+        </h3>
+        
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="form-grid">
+            <div class="input-group full-width">
+              <input type="text" name="course_name" id="course_name" placeholder=" " required>
+              <label for="course_name">Course Name</label>
+            </div>
+          </div>
 
-      <div class="mb-2">
-        <label for="course_name">Course Name:</label>
-        <input type="text" name="course_name" id="course_name" class="form-control" placeholder="Enter course name" required>
+          <div class="sub-course-section">
+            <h4 class="sub-section-title">
+              <i class="bi bi-list-ul"></i>
+              Sub Courses
+            </h4>
+            <div class="button-group">
+              <button type="button" id="sub_course_btn" class="btn-sub-course">
+                <i class="bi bi-journal-bookmark"></i>
+                Get Sub Courses
+              </button>
+              <button type="button" id="add_more_btn" class="btn-add-more">
+                <i class="bi bi-plus-circle"></i>
+                Add Custom
+              </button>
+            </div>
+          </div>
+
+          <div id="sub_courses_container" class="sub-courses-container">
+            <!-- Sub course input boxes will be added here -->
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-submit">
+              <i class="bi bi-check-circle"></i>
+              Continue to Course Form
+            </button>
+            <a href="{% url 'course_list' %}" class="btn-cancel">
+              <i class="bi bi-arrow-left"></i>
+              Back to Courses
+            </a>
+          </div>
+        </form>
       </div>
-
-      <div class="mb-2">
-        <div class="button-group">
-          <button type="button" id="sub_course_btn" class="btn btn-info" style="background-color: #17a2b8; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer;">
-            📚 Sub Course
-          </button>
-          <button type="button" id="add_more_btn" class="btn btn-success" style="background-color: #28a745; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; margin-left: 10px;">
-            ➕
-          </button>
-        </div>
-      </div>
-
-      <div id="sub_courses_container" class="mb-2">
-        <!-- Sub course input boxes will be added here -->
-      </div>
-    </fieldset>
-
-    <button type="submit" class="btn-success">Continue to Add Course Form</button>
-  </form>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -54,16 +79,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function createSubCourseInput() {
     subCourseCounter++;
     const inputDiv = document.createElement('div');
-    inputDiv.className = 'sub-course-input mb-2';
+    inputDiv.className = 'sub-course-input';
     inputDiv.innerHTML = `
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <input type="text" name="sub_course_${subCourseCounter}" class="form-control" placeholder="Enter sub course name" style="flex: 1;">
-        <button type="button" class="btn btn-danger remove-sub-course" style="background-color: #dc3545; color: white; padding: 0.5rem 0.75rem; border: none; border-radius: 4px; cursor: pointer;">❌</button>
+      <div class="input-group">
+        <input type="text" name="sub_course_${subCourseCounter}" placeholder=" " class="sub-course-field">
+        <label>Sub Course ${subCourseCounter}</label>
+        <button type="button" class="btn-remove-sub-course" title="Remove">
+          <i class="bi bi-x-circle"></i>
+        </button>
       </div>
     `;
     
     // Add remove functionality
-    const removeBtn = inputDiv.querySelector('.remove-sub-course');
+    const removeBtn = inputDiv.querySelector('.btn-remove-sub-course');
     removeBtn.addEventListener('click', function() {
       inputDiv.remove();
     });
@@ -75,44 +103,39 @@ document.addEventListener('DOMContentLoaded', function() {
   subCourseBtn.addEventListener('click', function() {
     const courseName = courseNameInput.value.trim();
     if (!courseName) {
-      alert('Please enter a course name first!');
+      showNotification('Please enter a course name first!', 'warning');
+      courseNameInput.focus();
       return;
     }
     
     // Define sub course options based on course name (case-insensitive)
     const subCourseOptions = {
-      'it': ['Web Development', 'Data Science', 'Networking', 'Cyber Security'],
-      'engineering': ['Computer Science Engineering (CSE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering'],
-      'medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)'],
-      'business': ['Accounting', 'Marketing', 'Finance', 'Human Resources'],
-      'arts': ['Painting', 'Music', 'Dance', 'Literature'],
-      'science': ['Physics', 'Chemistry', 'Biology', 'Mathematics']
+      'it': ['Web Development', 'Data Science', 'Networking', 'Cyber Security', 'Mobile App Development', 'Cloud Computing'],
+      'engineering': ['Computer Science Engineering (CSE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering', 'Electronics Engineering', 'Chemical Engineering'],
+      'medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)', 'Physiotherapy', 'Nursing'],
+      'business': ['Accounting', 'Marketing', 'Finance', 'Human Resources', 'Operations Management', 'Business Analytics'],
+      'arts': ['Painting', 'Music', 'Dance', 'Literature', 'Photography', 'Graphic Design'],
+      'science': ['Physics', 'Chemistry', 'Biology', 'Mathematics', 'Environmental Science', 'Biotechnology']
     };
     
     const normalizedCourseName = courseName.toLowerCase();
     const options = subCourseOptions[normalizedCourseName] || [];
     
     if (options.length > 0) {
-      let message = `Sub courses for ${courseName}:\n\n`;
-      options.forEach((option, index) => {
-        message += `${index + 1}. ${option}\n`;
-      });
-      message += '\nClick OK to add the first option, or enter your own sub course.';
+      // Clear existing sub courses
+      subCoursesContainer.innerHTML = '';
+      subCourseCounter = 0;
       
-      const userChoice = prompt(message);
-      if (userChoice !== null) {
+      // Add all predefined sub courses
+      options.forEach(option => {
         const inputBox = createSubCourseInput();
-        if (userChoice.trim() === '') {
-          // User clicked OK without entering anything, use first option
-          inputBox.querySelector('input').value = options[0];
-        } else {
-          // User entered their own sub course
-          inputBox.querySelector('input').value = userChoice.trim();
-        }
+        inputBox.querySelector('input').value = option;
         subCoursesContainer.appendChild(inputBox);
-      }
+      });
+      
+      showNotification(`Added ${options.length} sub courses for ${courseName}`, 'success');
     } else {
-      alert('No predefined sub courses available for "' + courseName + '". Use the + button to add custom sub courses.');
+      showNotification(`No predefined sub courses available for "${courseName}". Use the Add Custom button to create your own.`, 'info');
     }
   });
   
@@ -120,6 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
   addMoreBtn.addEventListener('click', function() {
     const inputBox = createSubCourseInput();
     subCoursesContainer.appendChild(inputBox);
+    // Focus on the new input
+    inputBox.querySelector('input').focus();
   });
   
   // Form submission - collect all sub courses
@@ -136,6 +161,32 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelector('form').appendChild(hiddenInput);
     }
   });
+  
+  // Notification function
+  function showNotification(message, type) {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(n => n.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+      <span>${message}</span>
+      <button class="notification-close" onclick="this.parentElement.remove()">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    document.querySelector('.form-section').insertBefore(notification, document.querySelector('.form-grid'));
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 5000);
+  }
 });
 </script>
 {% endblock %}
