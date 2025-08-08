@@ -23,6 +23,10 @@ body {
   overflow-x: hidden;
 }
 
+.table-container {
+    overflow-x: auto;
+}
+
 /* Animated background blobs for visual depth */
 body::before,
 body::after {
@@ -311,6 +315,7 @@ input:invalid, select:invalid {
 input.w-70 { width: 70%; min-width: 70px;}
 input.w-100, .w-100 { width: 100%!important;}
 input, select { box-shadow: none!important; }
+
 
 /* ---- Table styles ---- */
 .table-container {

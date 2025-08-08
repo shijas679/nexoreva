@@ -113,7 +113,7 @@ def attendance_details(request):
     # For each staff, get attendance data for each date in range
     attendance_details = []
     delta_days = (to_date - from_date).days + 1
-
+     
     for staff in all_staff:
         for offset in range(delta_days):
             current_date = from_date + timedelta(days=offset)
@@ -185,3 +185,7 @@ def leave_details(request, staff_id):
         'to_date': to_date,
     }
     return render(request, 'attendance/leave_details.html', context)
+
+
+
+
