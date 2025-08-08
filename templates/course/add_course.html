@@ -10,19 +10,33 @@
 <div class="container">
   <h2 class="mb-4">📚 Add New Course</h2>
 
-  <form method="POST">
+  <!-- Information Alert -->
+  <div class="alert alert-info" role="alert">
+    <strong>Important:</strong> All courses must have a course category and sub-course selected. 
+    If you don't see sub-courses in the dropdown, please go to 
+    <a href="{% url 'create_course' %}" class="alert-link">Create Course</a> first to set up the course structure.
+  </div>
+
+  <form method="POST" id="courseForm">
     {% csrf_token %}
     <fieldset>
       <legend class="w-auto">Course Information</legend>
 
       <div class="mb-2">
-        <label for="{{ form.name.id_for_label }}">Course Name:</label>
+        <label for="{{ form.name.id_for_label }}">Course Name: <span class="text-danger">*</span></label>
         {{ form.name }}
+        {% if form.name.errors %}
+          <div class="text-danger small">{{ form.name.errors.0 }}</div>
+        {% endif %}
       </div>
 
       <div class="mb-2">
-        <label for="{{ form.sub_column.id_for_label }}">Sub Column:</label>
+        <label for="{{ form.sub_column.id_for_label }}">Sub Column: <span class="text-danger">*</span></label>
         {{ form.sub_column }}
+        {% if form.sub_column.errors %}
+          <div class="text-danger small">{{ form.sub_column.errors.0 }}</div>
+        {% endif %}
+        <small class="form-text text-muted">Select a course category first to see available sub-courses.</small>
       </div>
 
       <div class="mb-2">
@@ -51,23 +65,13 @@
       </div>
     </fieldset>
 
-    <button type="submit" class="btn btn-success mt-3">Create Course</button>
+    <button type="submit" class="btn btn-success mt-3" id="submitBtn">Create Course</button>
   </form>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-// Define the sub column options for each course
-const subColumnOptions = {
-  'IT': ['Web Development', 'Data Science', 'Networking', 'Cyber Security'],
-  'Engineering': ['Computer Science Engineering (CSE)', 'Mechanical Engineering', 'Civil Engineering', 'Electrical Engineering'],
-  'Medical': ['MBBS (Bachelor of Medicine & Bachelor of Surgery)', 'BDS (Bachelor of Dental Surgery)', 'BAMS (Ayurveda)', 'BHMS (Homeopathy)'],
-  'Business': ['Accounting', 'Marketing', 'Finance', 'Human Resources'],
-  'Arts': ['Painting', 'Music', 'Dance', 'Literature'],
-  'Science': ['Physics', 'Chemistry', 'Biology', 'Mathematics']
-};
-
 // Function to generate unicode
 function generateUnicode() {
   const courseSelect = document.getElementById('id_name');
@@ -81,7 +85,11 @@ function generateUnicode() {
   let prefix = 'GEN';
   
   if (selectedCourse) {
-    prefix = selectedCourse.substring(0, 3).toUpperCase();
+    // Get the selected option text
+    const selectedOption = courseSelect.options[courseSelect.selectedIndex];
+    if (selectedOption) {
+      prefix = selectedOption.text.substring(0, 3).toUpperCase();
+    }
   }
   
   // Generate 5 random digits
@@ -92,7 +100,7 @@ function generateUnicode() {
   console.log('Generated unicode:', unicode);
 }
 
-// Function to update sub column options
+// Function to update sub column options via AJAX
 function updateSubColumns() {
   const courseSelect = document.getElementById('id_name');
   const subColumnSelect = document.getElementById('id_sub_column');
@@ -102,33 +110,59 @@ function updateSubColumns() {
     return;
   }
   
-  const selectedCourse = courseSelect.value;
-  console.log('Selected course:', selectedCourse);
+  const selectedCourseId = courseSelect.value;
+  console.log('Selected course ID:', selectedCourseId);
   
-  const options = subColumnOptions[selectedCourse] || [];
-  console.log('Available options:', options);
+  if (!selectedCourseId) {
+    // Clear sub column options if no course is selected
+    subColumnSelect.innerHTML = '<option value="">Select a sub course</option>';
+    return;
+  }
   
-  // Clear existing options
-  subColumnSelect.innerHTML = '<option value="">---------</option>';
-  
-  // Add new options
-  options.forEach(sub => {
-    const option = document.createElement('option');
-    option.value = sub;
-    option.textContent = sub;
-    subColumnSelect.appendChild(option);
-  });
-  
-  // Generate new unicode when course changes
-  generateUnicode();
-  
-  console.log('Sub column updated');
+  // Make AJAX request to get sub-courses
+  fetch(`{% url 'get_sub_courses' %}?course_category_id=${selectedCourseId}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Sub courses data:', data);
+      
+      // Clear existing options
+      subColumnSelect.innerHTML = '<option value="">Select a sub course</option>';
+      
+      // Add new options
+      if (data.sub_courses && data.sub_courses.length > 0) {
+        data.sub_courses.forEach(subCourse => {
+          const option = document.createElement('option');
+          option.value = subCourse.id;
+          option.textContent = subCourse.name;
+          subColumnSelect.appendChild(option);
+        });
+      } else {
+        // Show message if no sub-courses found
+        subColumnSelect.innerHTML = '<option value="">No sub-courses available for this category</option>';
+      }
+      
+      // Generate new unicode when course changes
+      generateUnicode();
+      
+      console.log('Sub column updated');
+    })
+    .catch(error => {
+      console.error('Error fetching sub-courses:', error);
+      subColumnSelect.innerHTML = '<option value="">Error loading sub-courses</option>';
+    });
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   const courseSelect = document.getElementById('id_name');
   const subColumnSelect = document.getElementById('id_sub_column');
+  const submitBtn = document.getElementById('submitBtn');
+  const courseForm = document.getElementById('courseForm');
   
   if (courseSelect && subColumnSelect) {
     console.log('Elements found, setting up event listeners');
@@ -137,7 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
     courseSelect.addEventListener('change', updateSubColumns);
     
     // Initialize sub columns based on current selection
-    updateSubColumns();
+    if (courseSelect.value) {
+      updateSubColumns();
+    }
     
     // Generate unicode if course is pre-filled
     if (courseSelect.value) {
@@ -145,6 +181,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   } else {
     console.log('Required elements not found');
+  }
+  
+  // Handle form submission
+  if (courseForm) {
+    courseForm.addEventListener('submit', function(e) {
+      // Generate unicode if not already generated
+      const unicodeField = document.getElementById('id_unicode');
+      if (unicodeField && !unicodeField.value) {
+        generateUnicode();
+      }
+      
+      // Disable submit button to prevent double submission
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating...';
+      }
+    });
   }
 });
 </script>

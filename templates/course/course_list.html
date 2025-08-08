@@ -14,6 +14,8 @@
     <a href="{% url 'create_course' %}" class="btn-primary">📝 Create Course</a>
   </div>
 
+  {% csrf_token %}
+
   <table class="course-table">
     <thead>
       <tr>
@@ -37,7 +39,11 @@
         <td>{{ course.start_date }}</td>
         <td>{{ course.end_date }}</td>
         <td>{{ course.fees }}</td>
-        <td><a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a></td>
+        <td>
+          <a href="{% url 'course_detail' course.id %}" class="view-btn">View More</a> 
+          <a href="{% url 'edit_course' course.id %}" class="edit-btn">Edit</a>
+          <button onclick="deleteCourse({{ course.id }}, '{{ course.name }}')" class="delete-btn">Delete</button>
+        </td>
       </tr>
       {% empty %}
       <tr>
@@ -47,5 +53,26 @@
     </tbody>
   </table>
 </div>
+
+<script>
+function deleteCourse(courseId, courseName) {
+  // Create a form to submit the delete request immediately
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = `/courses/${courseId}/delete/`;
+  
+  // Add CSRF token
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  const csrfInput = document.createElement('input');
+  csrfInput.type = 'hidden';
+  csrfInput.name = 'csrfmiddlewaretoken';
+  csrfInput.value = csrfToken;
+  form.appendChild(csrfInput);
+  
+  // Submit the form immediately
+  document.body.appendChild(form);
+  form.submit();
+}
+</script>
 
 {% endblock %}
