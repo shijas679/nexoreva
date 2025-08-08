@@ -4,62 +4,172 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/payments.css' %}">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>Payment Tracking</h2>
+<div class="main-content">
+  <div class="container payment-tracking-container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h2>
+        <i class="bi bi-credit-card"></i>
+        Payment Tracking
+      </h2>
+    </div>
 
-    <form method="get" class="row g-3 mb-4">
-        <div class="col-md-4">
-            <input type="text" name="staff_code" class="form-control" placeholder="Staff Code"
-                   value="{{ request.GET.staff_code }}">
+    <!-- Search and Filter Section -->
+    <div class="filter-section">
+      <h3 class="section-title">
+        <i class="bi bi-search"></i>
+        Search & Track Payments
+      </h3>
+      <form method="get" class="filter-form">
+        <div class="filter-grid">
+          <div class="input-group">
+            <input type="text" name="staff_code" placeholder=" " value="{{ request.GET.staff_code }}">
+            <label>Staff Code</label>
+          </div>
+          
+          <div class="input-group">
+            <input type="text" name="course_code" placeholder=" " value="{{ request.GET.course_code }}">
+            <label>Course Code</label>
+          </div>
+          
+          <div class="filter-actions">
+            <button type="submit" class="btn-search">
+              <i class="bi bi-search"></i>
+              Track Payments
+            </button>
+            <a href="{% url 'payment_tracking' %}" class="btn-reset">
+              <i class="bi bi-arrow-clockwise"></i>
+              Reset
+            </a>
+          </div>
         </div>
-        <div class="col-md-4">
-            <input type="text" name="course_code" class="form-control" placeholder="Course Code"
-                   value="{{ request.GET.course_code }}">
-        </div>
-        <div class="col-md-4">
-            <button type="submit" class="btn btn-primary w-100">Track</button>
-        </div>
-    </form>
+      </form>
+    </div>
 
     {% if results %}
-    <table class="table table-striped">
-        <thead>
+    <!-- Payment Results Table -->
+    <div class="table-section">
+      <div class="table-wrapper">
+        <table class="styled-table payment-table">
+          <thead>
             <tr>
-                <th>Staff Code</th>
-                <th>Staff Name</th>
-                <th>Role</th>
-                <th>Course Name</th>
-                <th>Course Code</th>
-                <th>Total Fee</th>
-                <th>Total Paid</th>
-                <th>Due Amount</th>
-                <th>Action</th>
+              <th class="col-staff-code">Staff Code</th>
+              <th class="col-staff-name">Staff Name</th>
+              <th class="col-role">Role</th>
+              <th class="col-course-name">Course Name</th>
+              <th class="col-course-code">Course Code</th>
+              <th class="col-total-fee">Total Fee</th>
+              <th class="col-total-paid">Total Paid</th>
+              <th class="col-due-amount">Due Amount</th>
+              <th class="col-actions">Actions</th>
             </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
             {% for enrollment in results %}
-            <tr>
-                <td>{{ enrollment.staff.staff_code }}</td>
-                <td>{{ enrollment.staff.full_name }}</td>
-                <td>{{ enrollment.staff.role }}</td>
-                <td>{{ enrollment.course.name }}</td>
-                <td>{{ enrollment.course.unicode }}</td>
-                <td>{{ enrollment.course.fees|floatformat:2 }}</td>
-                <td>{{ enrollment.total_paid|floatformat:2 }}</td>
-                <td>{{ enrollment.due_amount|floatformat:2 }}</td>
-                <td>
-                    <a href="{% url 'view_more' enrollment.staff.id enrollment.course.id %}" class="btn btn-sm btn-info">
-                        Track Payments
-                    </a>
-                </td>
+            <tr class="payment-row">
+              <td class="col-staff-code">
+                <div class="staff-code-cell">{{ enrollment.staff.staff_code }}</div>
+              </td>
+              <td class="col-staff-name">
+                <div class="staff-name-cell">{{ enrollment.staff.full_name }}</div>
+              </td>
+              <td class="col-role">
+                {% if enrollment.staff.role == "Employee" %}
+                  <span class="role-badge employee">{{ enrollment.staff.role }}</span>
+                {% else %}
+                  <span class="role-badge intern">{{ enrollment.staff.role }}</span>
+                {% endif %}
+              </td>
+              <td class="col-course-name">
+                <div class="course-name-cell">{{ enrollment.course.name }}</div>
+              </td>
+              <td class="col-course-code">
+                <div class="course-code-cell">{{ enrollment.course.unicode }}</div>
+              </td>
+              <td class="col-total-fee">
+                <div class="fee-cell total-fee">₹{{ enrollment.course.fees|floatformat:2 }}</div>
+              </td>
+              <td class="col-total-paid">
+                <div class="fee-cell paid-amount">₹{{ enrollment.total_paid|floatformat:2 }}</div>
+              </td>
+              <td class="col-due-amount">
+                {% if enrollment.due_amount > 0 %}
+                  <div class="fee-cell due-amount">₹{{ enrollment.due_amount|floatformat:2 }}</div>
+                {% else %}
+                  <span class="status-indicator completed">Paid</span>
+                {% endif %}
+              </td>
+              <td class="col-actions">
+                <a href="{% url 'view_more' enrollment.staff.id enrollment.course.id %}" class="action-btn track-btn">
+                  <i class="bi bi-credit-card"></i>
+                  Track Payments
+                </a>
+              </td>
             </tr>
             {% endfor %}
-        </tbody>
-    </table>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payment Summary -->
+    <div class="summary-section">
+      <h3 class="section-title">
+        <i class="bi bi-graph-up"></i>
+        Payment Summary
+      </h3>
+      <div class="summary-grid">
+        <div class="summary-card total-students">
+          <div class="summary-icon">
+            <i class="bi bi-people"></i>
+          </div>
+          <div class="summary-info">
+            <div class="summary-count">{{ results|length }}</div>
+            <div class="summary-label">Total Enrollments</div>
+          </div>
+        </div>
+        <div class="summary-card total-fees">
+          <div class="summary-icon">
+            <i class="bi bi-cash-stack"></i>
+          </div>
+          <div class="summary-info">
+            <div class="summary-count">₹{{ total_fees|floatformat:0 }}</div>
+            <div class="summary-label">Total Fees</div>
+          </div>
+        </div>
+        <div class="summary-card total-collected">
+          <div class="summary-icon">
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <div class="summary-info">
+            <div class="summary-count">₹{{ total_collected|floatformat:0 }}</div>
+            <div class="summary-label">Total Collected</div>
+          </div>
+        </div>
+        <div class="summary-card total-due">
+          <div class="summary-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+          </div>
+          <div class="summary-info">
+            <div class="summary-count">₹{{ total_due|floatformat:0 }}</div>
+            <div class="summary-label">Total Due</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-content">
+        <i class="bi bi-search"></i>
+        <h4>Search for Payment Records</h4>
+        <p>Enter staff code or course code to track payment information.</p>
+      </div>
+    </div>
     {% endif %}
+  </div>
 </div>
 {% endblock %}

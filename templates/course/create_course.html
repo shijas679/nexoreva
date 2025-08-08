@@ -1,9 +1,9 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'course_css/add-course.css' %}">
+<link rel="stylesheet" href="{% static 'css/course.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -85,6 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
   addMoreBtn.addEventListener('click', function() {
     const inputBox = createSubCourseInput();
     subCoursesContainer.appendChild(inputBox);
+    // Focus on the new input
+    inputBox.querySelector('input').focus();
   });
 
   // Form validation
@@ -112,6 +114,32 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
   });
+  
+  // Notification function
+  function showNotification(message, type) {
+    // Remove any existing notifications
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(n => n.remove());
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+      <i class="bi bi-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+      <span>${message}</span>
+      <button class="notification-close" onclick="this.parentElement.remove()">
+        <i class="bi bi-x"></i>
+      </button>
+    `;
+    
+    document.querySelector('.form-section').insertBefore(notification, document.querySelector('.form-grid'));
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 5000);
+  }
 });
 </script>
 {% endblock %}
