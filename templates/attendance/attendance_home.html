@@ -55,10 +55,11 @@
       <button type="submit">Submit Attendance</button>
     </form>
 
-    <!-- Request Leave Button inside form container -->
-    <a href="{% url 'leave_request' %}" class="leave-btn">
-      Request Leave
-    </a>
+    <!-- Buttons Row -->
+    <div class="button-group">
+      <a href="{% url 'leave_request' %}" class="leave-btn">Request Leave</a>
+      <a href="{% url 'add_task' %}" class="task-btn">Add Tasks</a>
+    </div>
   </div>
 
   <!-- Messages -->

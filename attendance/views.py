@@ -185,3 +185,7 @@ def leave_details(request, staff_id):
         'to_date': to_date,
     }
     return render(request, 'attendance/leave_details.html', context)
+
+
+def add_task(request):
+    return render(request, 'attendance/add_task.html')
